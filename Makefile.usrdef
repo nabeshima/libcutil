@@ -1,0 +1,13 @@
+#
+# $Id$
+# Copyright (c) 2013 Cota Nabeshima <cota@upard.org>
+# This file is subject to the MIT license available at,
+# http://opensource.org/licenses/mit-license.php
+#
+
+INSTALLPATH=/usr/local
+
+CXX=g++
+
+CFLAGS_TEST=-Wall -g -I../../ # -D_SIGEXCEPTION_ Exception.cpp
+LDFLAGS_TEST=
