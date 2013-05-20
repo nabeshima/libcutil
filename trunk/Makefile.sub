@@ -1,0 +1,23 @@
+#
+# $Id$
+# Copyright (c) 2013 Cota Nabeshima <cota@upard.org>
+# This file is subject to the MIT license available at,
+# http://opensource.org/licenses/mit-license.php
+#
+
+.PHONY: test doc
+
+all:
+
+test:
+	( cd test; $(MAKE) test )
+
+doc:
+	( cd doc && $(MAKE) doc )
+
+clean distclean:
+	find . -name "*~" -exec rm {} \;
+	find . -name ".#*" -exec rm {} \;
+	( cd test && $(MAKE) $@ )
+	( cd doc && $(MAKE) $@ ) 
+

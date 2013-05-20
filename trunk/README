@@ -1,0 +1,38 @@
+REQUIREMENTS:
+lapack for matrix inversion
+pkg-config for X11
+
+CUTIL is for a header library for light use.
+We can use it just by including necessary headers.
+
+
+core/*
+        are wrappers of POSIX process and thread.
+
+misc/*
+        are classes for encryption, 
+        written in the standard C++.     
+
+cotave/*
+        are a portable matrix class written in standard C++.
+        It includes fixed size matrices and kinematic operation;
+        i.e. it is suitable for robotic probramming.
+        Currently, its namespace is not cutil.
+
+socket/* 
+        are wrappers of the BSD socket API.
+
+
+widget/*
+        are wrappers for simple GUI.
+        **NOTE** Exceptions are less implemented.
+
+widget/x11/*
+        are wrappers of XLib 
+        for fast and light-weight GUI
+        (status monitor, camera, opengl or so on).
+
+widget/directfb/*
+        are wrappers of DirectFB
+        for fast and light-weight GUI working on an embedded linux.
+
