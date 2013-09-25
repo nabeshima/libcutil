@@ -52,7 +52,9 @@ inline // _INLINE_
 void Address::setAddress( const in_addr &iaddr, uint16_t port ) throw () {
   clear();
   sockaddr_in &saddr = asIPv4();
+#if defined(__APPLE__) && !defined(__FreeBSD__)
   saddr.sin_len = sizeof( sockaddr_in );
+#endif
   saddr.sin_family = IPv4;
   saddr.sin_addr = iaddr;
   saddr.sin_port = htons( port );
@@ -62,7 +64,9 @@ inline // _INLINE_
 void Address::setAddress( const in6_addr &iaddr6, uint16_t port ) throw () {
   clear();
   sockaddr_in6 &saddr = asIPv6();
+#if defined(__APPLE__) && !defined(__FreeBSD__)
   saddr.sin6_len = sizeof( sockaddr_in6 );
+#endif
   saddr.sin6_family = IPv6;
   saddr.sin6_addr = iaddr6;
   saddr.sin6_port = htons( port );
@@ -71,6 +75,12 @@ void Address::setAddress( const in6_addr &iaddr6, uint16_t port ) throw () {
 inline // _INLINE_
 INFamily Address::getFamily() const throw () {
   return (INFamily)storage.ss_family;
+}
+
+// to support no ss_len environment
+inline // _INLINE_
+int Address::getAddressLength() const throw () {
+  return ( isIPv4()? sizeof( sockaddr_in ): sizeof( sockaddr_in6 ) );
 }
 
 inline // _INLINE_
@@ -207,7 +217,7 @@ void Address::resolve( Sequence< Address, Allocator > &result,
   
   hints.ai_family = AF_UNSPEC;
   //  hints.ai_protocol = TCP;
-  hints.ai_flags = AI_NUMERICSERV;
+  //  hints.ai_flags = AI_NUMERICSERV;  // comment out to avoid Mac OS X bug
   if ( numeric_host ) {
     hints.ai_flags |= AI_NUMERICHOST;
   }
@@ -227,7 +237,7 @@ void Address::resolve( Sequence< Address, Allocator > &result,
   for ( addrinfo *i = res; i != NULL; i = i->ai_next ) {
     
     Address tmp;
-    
+
     switch ( i->ai_family ) {
     case IPv4:
       tmp.setAddress( ( (sockaddr_in*)i->ai_addr )->sin_addr, 0 );

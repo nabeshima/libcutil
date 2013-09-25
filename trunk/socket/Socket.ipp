@@ -150,7 +150,7 @@ bool Socket::connect( const Address &to_addr, uint64_t timeout_usec )
   }
   
   if ( timeout_usec == 0 ) {  // blocking
-    if ( ::connect( sock, (const sockaddr*)&to_addr.asStorage(), to_addr.asStorage().ss_len ) < 0 ) {
+    if ( ::connect( sock, (const sockaddr*)&to_addr.asStorage(), to_addr.getAddressLength() ) < 0 ) {
       close();
       return false;
     }
@@ -176,7 +176,7 @@ bool Socket::connect( const Address &to_addr, uint64_t timeout_usec )
     }
 #endif
     
-    if ( ::connect( sock, (const sockaddr*)&to_addr.asStorage(), to_addr.asStorage().ss_len ) < 0 ) {
+    if ( ::connect( sock, (const sockaddr*)&to_addr.asStorage(), to_addr.getAddressLength() ) < 0 ) {
       if ( errno != EINPROGRESS ) {
 	close();
 	
@@ -580,12 +580,12 @@ int Socket::send( const void *data, int size, const Address &to_addr ) throw () 
   if ( getType() != TCP ) {
     if ( to_addr != Address() ) {
       ret = ::sendto( sock, data, size, 0, 
-		      (sockaddr*)&to_addr.asStorage(), to_addr.asStorage().ss_len );
+		      (sockaddr*)&to_addr.asStorage(), to_addr.getAddressLength() );
       this->to_addr = to_addr;
     }
     else if ( this->to_addr != Address() ) {
       ret = ::sendto( sock, data, size, 0, 
-		      (sockaddr*)&this->to_addr.asStorage(), this->to_addr.asStorage().ss_len );
+		      (sockaddr*)&this->to_addr.asStorage(), this->to_addr.getAddressLength() );
     }
   }
   else {

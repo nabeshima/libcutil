@@ -69,7 +69,10 @@ bool getGDBInfo( const std::string &proc_name, const std::string &address, std::
   }
   
   proc_gdb.stdout() >> line_num >> dummy >> src_name;
-  src_name = src_name.substr( 1, src_name.size() - 2 );
+
+  if ( src_name.size() > 2 ) { // to support no-gdb environment
+    src_name = src_name.substr( 1, src_name.size() - 2 );
+  }
 
   proc_gdb.close();
   
