@@ -37,6 +37,7 @@ public:
   void setAddress( const in6_addr &iaddr6, uint16_t port ) throw ();
   
   INFamily getFamily() const throw ();
+  int getAddressLength() const throw ();
 
   bool isIPv4() const throw ();
   bool isIPv6() const throw ();

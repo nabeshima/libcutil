@@ -125,8 +125,7 @@ bool intX_t::absNoless( const intX_t &l, const intX_t &s ) throw () {
     std::vector< int64_t >::const_reverse_iterator
       lit = l.body.rbegin(),
       lendIt = l.body.rend(),
-      sit = s.body.rbegin(),
-      sendIt = s.body.rend();
+      sit = s.body.rbegin();
     
     while ( lit != lendIt ) {
       if ( *lit < *sit ) {
@@ -720,8 +719,7 @@ bool intX_t::operator==( const intX_t &x ) const throw () {
   std::vector< int64_t >::const_reverse_iterator
     it = body.rbegin(),
     endIt = body.rend(),
-    xit = x.body.rbegin(),
-    xendIt = x.body.rend();
+    xit = x.body.rbegin();
   
   while ( it != endIt ) {
     if ( *it != *xit ) {
