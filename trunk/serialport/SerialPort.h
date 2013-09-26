@@ -51,6 +51,12 @@ public:
     throw ( SerialPortException, SerialPortTimeoutException );
 
   int write( const void *data, int size ) throw ();
+
+  int bytesInReadBuffer() 
+    throw ( SerialPortException );
+
+  void flushReadBuffer() throw ();
+  void flushWriteBuffer() throw ();
 };
 
 }
