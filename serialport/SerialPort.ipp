@@ -1,3 +1,7 @@
+extern "C" {
+#include <sys/ioctl.h>
+}
+
 namespace cutil {
 
 inline
@@ -22,7 +26,7 @@ bool SerialPort::open( const std::string& portname,
     close();
   }
   
-  fd = ::open( portname.c_str(), O_RDWR | O_NOCTTY | O_NDELAY );
+  fd = ::open( portname.c_str(), O_RDWR | O_NOCTTY );
   
   if ( fd == -1 ) {
     return false;
@@ -50,13 +54,13 @@ bool SerialPort::open( const std::string& portname,
   term_attr.c_cflag &= ~( CSIZE | PARENB | CSTOPB ); // clear
   term_attr.c_cflag |= databit | paritybit | stopbit | CREAD | CLOCAL;
 
-  term_attr.c_iflag &= ~( ICANON | ECHO | ECHOE | ISIG ); // non-canonical mode
+  term_attr.c_lflag &= ~( ICANON | ECHO | ECHOE | ISIG ); // non-canonical mode
   
   if ( hardware_control ) {
     term_attr.c_cflag |= CRTSCTS;
   }
   
-  term_attr.c_cc[ VMIN ] = 1;  // is correct?
+  term_attr.c_cc[ VMIN ] = 1;
   term_attr.c_cc[ VTIME ] = 0;
   
   if ( ::tcsetattr( fd, TCSANOW, &term_attr ) < 0 ) {
@@ -177,5 +181,38 @@ int SerialPort::write( const void *data, int size ) throw () {
   return ret;
 
 }
+
+inline
+int SerialPort::bytesInReadBuffer() 
+  throw ( SerialPortException ) {
+
+  if ( !isOpen() ) {
+    return 0;
+  }
+  
+  int num;
+
+  if ( ::ioctl( fd, FIONREAD, &num ) != 0 ) {
+    throw SerialPortException( "::ioctrl( FIONREAD ) error", __EXCEPTION_INFO__ );
+  }
+  
+  return num;
+}
+
+
+inline
+void SerialPort::flushReadBuffer() throw () {
+  if ( isOpen() ) {
+    ::tcflush( fd, TCIFLUSH );
+  }
+}
+
+inline
+void SerialPort::flushWriteBuffer() throw () {
+  if ( isOpen() ) {
+    ::tcflush( fd, TCOFLUSH );
+  }  
+}
+
 
 }

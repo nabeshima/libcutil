@@ -10,7 +10,7 @@ int main() {
 
   try {
     // to secify baudrate by using B460800 if available
-    bool ret = sport.open( "/def/ttyACM0", 460800, EIGHT, NONE, ONE );  
+    bool ret = sport.open( "/dev/ttyACM0", 460800, EIGHT, NONE, ONE );  
     cout << ret << endl;
   }
   catch( Exception &e ) {
