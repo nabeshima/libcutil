@@ -21,13 +21,21 @@ class SignalBase {
 protected:
   typedef std::tr1::function< Signature > function_type;
   typedef std::list< std::tr1::function< Signature > > slot_type;
-
+  
   std::list< std::tr1::function< Signature > > slots;
   
 public:  
   std::list< R > results;
 };
 
+template< typename Signature >
+class SignalBase< void, Signature > {
+protected:
+  typedef std::tr1::function< Signature > function_type;
+  typedef std::list< std::tr1::function< Signature > > slot_type;
+  
+  std::list< std::tr1::function< Signature > > slots;
+};
 
 template< class T >
 class Signal;
@@ -58,6 +66,29 @@ class Signal;
   };                                                                    \
 
 
+									
+#define CUTIL_SIGNAL_CLASSN( x )                                         \
+  template< CUTIL_SIGNAL_clP##x##n >					\
+  class Signal< void ( CUTIL_SIGNAL_P##x ) >: public SignalBase< void, void ( CUTIL_SIGNAL_P##x ) > { \
+    typedef SignalBase< void, void ( CUTIL_SIGNAL_P##x ) > BASE;	\
+    									\
+  public:                                                               \
+  void connect( CUTIL_TYPENAME BASE::function_type slot ) throw () {          \
+    BASE::slots.push_back( slot );                                      \
+  }                                                                     \
+                                                                        \
+  void operator()( CUTIL_SIGNAL_Pp##x ) {                               \
+    CUTIL_TYPENAME BASE::slot_type::iterator                                  \
+      it = BASE::slots.begin(),                                         \
+      endIt = BASE::slots.end();                                        \
+    while ( it != endIt ) {                                             \
+      (*it)( CUTIL_SIGNAL_p##x );					\
+      ++it;                                                             \
+    }                                                                   \
+  }                                                                     \
+  };                                                                    \
+
+
 CUTIL_SIGNAL_CLASS( 0 )
 CUTIL_SIGNAL_CLASS( 1 )
 CUTIL_SIGNAL_CLASS( 2 )
@@ -68,6 +99,23 @@ CUTIL_SIGNAL_CLASS( 6 )
 CUTIL_SIGNAL_CLASS( 7 )
 CUTIL_SIGNAL_CLASS( 8 )
 CUTIL_SIGNAL_CLASS( 9 )
+
+
+#define CUTIL_TYPENAME
+CUTIL_SIGNAL_CLASSN( 0 )
+#undef CUTIL_TYPENAME
+#define CUTIL_TYPENAME typename
+
+CUTIL_SIGNAL_CLASSN( 1 )
+CUTIL_SIGNAL_CLASSN( 2 )
+CUTIL_SIGNAL_CLASSN( 3 )
+CUTIL_SIGNAL_CLASSN( 4 )
+CUTIL_SIGNAL_CLASSN( 5 )
+CUTIL_SIGNAL_CLASSN( 6 )
+CUTIL_SIGNAL_CLASSN( 7 )
+CUTIL_SIGNAL_CLASSN( 8 )
+CUTIL_SIGNAL_CLASSN( 9 )
+
 
 #undef CUTIL_SIGNAL_CLASS
 

@@ -34,6 +34,16 @@ struct Add {
   }
 };
 
+struct Print {
+  void operator()() {
+    cout << "print class" << endl;
+  }
+};
+
+void print() {
+  cout << "print func" << endl;
+}
+
 double mul( double i, double j ) {
   return i * j;
 }
@@ -70,6 +80,14 @@ int main() {
       cout << *it << endl;
       ++it;
     }
+  }
+
+  {
+    Signal< void () > sig;
+    sig.connect( print );
+    sig.connect( Print() );
+
+    sig();
   }
 
   

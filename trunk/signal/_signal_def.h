@@ -16,6 +16,17 @@
 #define CUTIL_SIGNAL_clP8 , class P1, class P2, class P3, class P4, class P5, class P6, class P7, class P8
 #define CUTIL_SIGNAL_clP9 , class P1, class P2, class P3, class P4, class P5, class P6, class P7, class P8, class P9
 
+#define CUTIL_SIGNAL_clP0n 
+#define CUTIL_SIGNAL_clP1n class P1
+#define CUTIL_SIGNAL_clP2n class P1, class P2
+#define CUTIL_SIGNAL_clP3n class P1, class P2, class P3
+#define CUTIL_SIGNAL_clP4n class P1, class P2, class P3, class P4
+#define CUTIL_SIGNAL_clP5n class P1, class P2, class P3, class P4, class P5
+#define CUTIL_SIGNAL_clP6n class P1, class P2, class P3, class P4, class P5, class P6
+#define CUTIL_SIGNAL_clP7n class P1, class P2, class P3, class P4, class P5, class P6, class P7
+#define CUTIL_SIGNAL_clP8n class P1, class P2, class P3, class P4, class P5, class P6, class P7, class P8
+#define CUTIL_SIGNAL_clP9n class P1, class P2, class P3, class P4, class P5, class P6, class P7, class P8, class P9
+
 #define CUTIL_SIGNAL_P0 
 #define CUTIL_SIGNAL_P1 P1
 #define CUTIL_SIGNAL_P2 P1, P2
