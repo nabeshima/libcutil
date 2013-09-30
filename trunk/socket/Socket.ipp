@@ -337,6 +337,7 @@ bool Socket::joinMulticastGroup( const Address &group_addr )
   return ret;
 }
 
+_INLINE_
 bool Socket::leaveMulticastGroup( const Address &group_addr ) 
   throw ( SocketException,
 	  SocketFamilyUnmatchException, 
