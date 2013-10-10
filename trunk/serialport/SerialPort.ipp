@@ -36,7 +36,7 @@ bool SerialPort::open( const std::string& portname,
   termios term_attr;
   
   if ( ::tcgetattr( fd, &term_attr ) < 0 ) {
-    close();
+    _close();
     throw SerialPortException( "::tcgetattr error", __EXCEPTION_INFO__ );
   }
   pre_term_attr = term_attr;
@@ -44,7 +44,7 @@ bool SerialPort::open( const std::string& portname,
   
   if ( ::cfsetispeed( &term_attr, baudrate ) != 0 ||
        ::cfsetospeed( &term_attr, baudrate ) != 0 ) {
-    close();
+    _close();
     throw SerialPortException( "::cfset{i/o}speed error", __EXCEPTION_INFO__ );
   }
   
@@ -64,7 +64,7 @@ bool SerialPort::open( const std::string& portname,
   term_attr.c_cc[ VTIME ] = 0;
   
   if ( ::tcsetattr( fd, TCSANOW, &term_attr ) < 0 ) {
-    close();
+    _close();
     throw SerialPortException( "::tcsetattr error", __EXCEPTION_INFO__ );
   }
   
@@ -81,6 +81,18 @@ void SerialPort::close()
   
   if ( ::tcsetattr( fd, TCSANOW, &pre_term_attr ) < 0 ) {
     throw SerialPortException( "::tcsetattr error", __EXCEPTION_INFO__ );
+  }
+  
+  ::close( fd );
+
+  fd = -1;
+}
+
+inline
+void SerialPort::_close() throw () {
+
+  if ( !isOpen() ) {
+    return;
   }
   
   ::close( fd );
@@ -114,7 +126,7 @@ bool SerialPort::isReadable( uint64_t timeout_usec )
     throw SerialPortTimeoutException( "timeout ::select", __EXCEPTION_INFO__ );
   }
   else if ( rc < 0 ) {
-    close();
+    _close();
     throw SerialPortException( "::select error", __EXCEPTION_INFO__ );
   }
   
@@ -132,7 +144,7 @@ int SerialPort::read( void *data, int size ) throw () {
   int ret = ::read( fd, data, size );
   
   if ( size > 0 && ret <= 0 ) {
-    close();
+    _close();
   }
 
   return ret;
@@ -160,7 +172,7 @@ bool SerialPort::isWritable( uint64_t timeout_usec )
     throw SerialPortTimeoutException( "timeout ::select", __EXCEPTION_INFO__ );
   }
   else if ( rc < 0 ) {
-    close();
+    _close();
     throw SerialPortException( "::select error", __EXCEPTION_INFO__ );
   }
   
@@ -176,7 +188,7 @@ int SerialPort::write( const void *data, int size ) throw () {
   int ret = ::write( fd, data, size );
 
   if ( ret < 0 ) {
-    close();
+    _close();
   }
   return ret;
 

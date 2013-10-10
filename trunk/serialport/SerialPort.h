@@ -24,6 +24,8 @@ private:
   int fd;
   termios pre_term_attr;
 
+  void _close() throw ();
+
 public:
   SerialPort() throw ();
   ~SerialPort() throw ();
