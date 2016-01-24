@@ -1,6 +1,6 @@
 /**
- * $Id$
- * Copyright (c) 2013 Cota Nabeshima <cota@upard.org>
+ * $Id: Address.h 5 2013-09-25 08:42:57Z cota@upard.org $
+ * Copyright (c) 2016 Cota Nabeshima <cota@upard.org>
  * This file is subject to the MIT license available at,
  * http://opensource.org/licenses/mit-license.php
  */
@@ -10,8 +10,7 @@
 
 #include <string>
 
-#include "_socket_config.h"
-#include "AddressException.h"
+#include "./_socket_config.h"
 
 namespace cutil {
 
@@ -19,61 +18,58 @@ namespace cutil {
   IP address and port.
 */
 class Address {
-private:
+ private:
   sockaddr_storage storage;
-  
-public:
-  Address() throw ();
-  Address( const Address &address ) throw ();
-  Address( const in_addr &iaddr, uint16_t port ) throw ();
-  Address( const in6_addr &iaddr6, uint16_t port ) throw ();
-  
-  Address& operator=( const Address &address ) throw ();
-  
-  void clear() throw ();
 
-  void setAddress( const Address &address ) throw ();  
-  void setAddress( const in_addr &iaddr, uint16_t port ) throw ();
-  void setAddress( const in6_addr &iaddr6, uint16_t port ) throw ();
-  
-  INFamily getFamily() const throw ();
-  int getAddressLength() const throw ();
+ public:
+  Address();
+  Address(const Address &address);
+  Address(const in_addr &iaddr, uint16_t port);
+  Address(const in6_addr &iaddr6, uint16_t port);
+  explicit Address(const std::string &socket_file_local_path);
 
-  bool isIPv4() const throw ();
-  bool isIPv6() const throw ();
-  
-  sockaddr_in& asIPv4() throw ();
-  sockaddr_in6& asIPv6() throw ();
-  sockaddr_storage& asStorage() throw ();
-  const sockaddr_in& asIPv4() const throw ();
-  const sockaddr_in6& asIPv6() const throw ();
-  const sockaddr_storage& asStorage() const throw ();
-  
-  void setPort( uint16_t port ) throw ();
-  uint16_t getPort() const throw ();
+  Address &operator=(const Address &address);
 
-  std::string toString() const throw ();    
-  
-  bool isMulticast() const throw ();
+  void clear();
 
-  bool operator==( const Address &address ) const throw ();
-  bool operator!=( const Address &address ) const throw ();
+  void setAddress(const Address &address);
+  void setAddress(const in_addr &iaddr, uint16_t port);
+  void setAddress(const in6_addr &iaddr6, uint16_t port);
+  void setAddress(const std::string &socket_file_local_path);
+
+  INFamily getFamily() const;
+  int getAddressLength() const;
+
+  bool isIPv4() const;
+  bool isIPv6() const;
+  bool isLocal() const;
+
+  sockaddr_in &asIPv4();
+  sockaddr_in6 &asIPv6();
+  sockaddr_un &asLocal();
+  sockaddr_storage &asStorage();
+  const sockaddr_in &asIPv4() const;
+  const sockaddr_in6 &asIPv6() const;
+  const sockaddr_un &asLocal() const;
+  const sockaddr_storage &asStorage() const;
+
+  void setPort(uint16_t port);
+  uint16_t getPort() const;
+
+  std::string toString() const;
+
+  bool isMulticast() const;
+
+  bool operator==(const Address &address) const;
+  bool operator!=(const Address &address) const;
 
   // resolve hostname
-  template< template < typename, typename > class Sequence,
-            typename Allocator >
-  static void resolve( Sequence< Address, Allocator > &result, 
-                       const std::string &host, 
-                       bool numeric_host = true )
-    throw ( ResolveHostnameException );
+  template <template <typename, typename> class Sequence, typename Allocator>
+  static bool resolve(Sequence<Address, Allocator> *result,
+                      const std::string &host, bool numeric_host = true);
 };
+}  // namespace cutil
 
-}
-
-
-// #ifndef _NO_INLINE_
-// #define _INLINE_ inline
 #include "Address.ipp"
-// #endif
 
 #endif

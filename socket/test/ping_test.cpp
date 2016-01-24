@@ -1,81 +1,56 @@
 /**
- * $Id$
- * Copyright (c) 2013 Cota Nabeshima <cota@upard.org>
+ * $Id: ping_test.cpp 3 2013-05-20 13:07:23Z cota@upard.org $
+ * Copyright (c) 2016 Cota Nabeshima <cota@upard.org>
  * This file is subject to the MIT license available at,
  * http://opensource.org/licenses/mit-license.php
  */
 
 #include "PingClient.h"
 
+#include <iostream>
+#include <vector>
+
 using namespace std;
 using namespace cutil;
 
 int main() {
-  
-  try {
-    vector< Address > res;
-    //    Address::resolve( res, "127.0.0.1" );
-    Address::resolve( res, "::1" );
-    //    Address::resolve( "133.243.238.163", res );
-    
-    for ( unsigned int i = 0; i < res.size(); ++i ) {
-      cout << res[ i ].isIPv4() << " " << res[ i ].isIPv6() << ", " 
-           << res[ i ].toString() << "\t" << res[ i ].getPort() << endl;
-    }
+  vector<Address> res;
+  //    Address::resolve( &res, "127.0.0.1" );
+  Address::resolve(&res, "::1");
 
-    cout << PingClient::ping( res[ 0 ], 1000000 ) << " localhost" << endl;
-  }
-  catch ( const Exception &e ) {
-    cout << e.what() << " from " << e.where() << endl;
-    e.printStackTrace();
+  for (unsigned int i = 0; i < res.size(); ++i) {
+    cout << res[i].isIPv4() << " " << res[i].isIPv6() << ", "
+         << res[i].toString() << "\t" << res[i].getPort() << endl;
   }
 
-  try {
-    vector< Address > res;
-    Address::resolve( res, "yahoo.com", false );
+  cout << PingClient::ping(res[0], 1000000) << " localhost" << endl;
 
-    for ( unsigned int i = 0; i < res.size(); ++i ) {
-      cout << res[ i ].isIPv4() << " " << res[ i ].isIPv6() << ", " 
-           << res[ i ].toString() << "\t" << res[ i ].getPort() << endl;
-    }
+  Address::resolve(&res, "yahoo.com", false);
 
-
-    cout << PingClient::ping( res[ 0 ], 1000000 ) << " yahoo.com" << endl;
-  }
-  catch ( const Exception &e ) {
-    cout << e.what() << " from " << e.where() << endl;
+  for (unsigned int i = 0; i < res.size(); ++i) {
+    cout << res[i].isIPv4() << " " << res[i].isIPv6() << ", "
+         << res[i].toString() << "\t" << res[i].getPort() << endl;
   }
 
-  try {
-    vector< Address > res;
-    Address::resolve( res, "gglevv.jp", false );
+  cout << PingClient::ping(res[0], 1000000) << " yahoo.com" << endl;
 
-    for ( unsigned int i = 0; i < res.size(); ++i ) {
-      cout << res[ i ].isIPv4() << " " << res[ i ].isIPv6() << ", " 
-           << res[ i ].toString() << "\t" << res[ i ].getPort() << endl;
-    }
+  Address::resolve(&res, "gglevv.jp", false);
 
-    cout << PingClient::ping( res[ 0 ], 1000000 ) << " gglevv.jp" << endl;
-  }
-  catch ( const Exception &e ) {
-    cout << e.what() << " from " << e.where() << endl;
+  for (unsigned int i = 0; i < res.size(); ++i) {
+    cout << res[i].isIPv4() << " " << res[i].isIPv6() << ", "
+         << res[i].toString() << "\t" << res[i].getPort() << endl;
   }
 
-  try {
-    vector< Address > res;
-    Address::resolve( res, "google.jp", false );
+  cout << PingClient::ping(res[0], 1000000) << " gglevv.jp" << endl;
 
-    for ( unsigned int i = 0; i < res.size(); ++i ) {
-      cout << res[ i ].isIPv4() << " " << res[ i ].isIPv6() << ", " 
-           << res[ i ].toString() << "\t" << res[ i ].getPort() << endl;
-    }
+  Address::resolve(&res, "google.jp", false);
 
-
-    cout << PingClient::ping( res[ 0 ], 1000000 ) << " google.com" << endl;
+  for (unsigned int i = 0; i < res.size(); ++i) {
+    cout << res[i].isIPv4() << " " << res[i].isIPv6() << ", "
+         << res[i].toString() << "\t" << res[i].getPort() << endl;
   }
-  catch ( const Exception &e ) {
-    cout << e.what() << " from " << e.where() << endl;
-  }
-  
+
+  cout << PingClient::ping(res[0], 1000000) << " google.com" << endl;
+
   return 0;
 }

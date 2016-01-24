@@ -1,6 +1,6 @@
 /**
- * $Id$
- * Copyright (c) 2013 Cota Nabeshima <cota@upard.org>
+ * $Id: signal_test.cpp 7 2013-09-30 05:32:42Z cota@upard.org $
+ * Copyright (c) 2016 Cota Nabeshima <cota@upard.org>
  * This file is subject to the MIT license available at,
  * http://opensource.org/licenses/mit-license.php
  */

@@ -1,6 +1,6 @@
 /**
- * $Id$
- * Copyright (c) 2013 Cota Nabeshima <cota@upard.org>
+ * $Id: CRC32C.h 3 2013-05-20 13:07:23Z cota@upard.org $
+ * Copyright (c) 2016 Cota Nabeshima <cota@upard.org>
  * This file is subject to the MIT license available at,
  * http://opensource.org/licenses/mit-license.php
  */
@@ -15,21 +15,20 @@ extern "C" {
 namespace cutil {
 
 class CRC32C {
-private:
+ private:
   uint32_t crc32c;
-  
-public:
-  CRC32C() throw ();
-  
-  void reset() throw ();
-  void push( const void *msg, uint64_t msg_byte ) throw ();
+
+ public:
+  CRC32C();
+
+  void reset();
+  void push(const void *msg, uint64_t msg_byte);
 
   //! big endian
-  void crc( void *result ) const throw ();
-  static void crc( void *result, const void *msg, uint64_t msg_byte ) throw ();
+  void crc(void *result) const;
+  static void crc(void *result, const void *msg, uint64_t msg_byte);
 };
-
-}
+}  // namespace cutil
 
 #include "CRC32C.ipp"
 

@@ -1,6 +1,6 @@
 /**
- * $Id$
- * Copyright (c) 2013 Cota Nabeshima <cota@upard.org>
+ * $Id: period_test.cpp 3 2013-05-20 13:07:23Z cota@upard.org $
+ * Copyright (c) 2016 Cota Nabeshima <cota@upard.org>
  * This file is subject to the MIT license available at,
  * http://opensource.org/licenses/mit-license.php
  */
@@ -20,79 +20,72 @@ using namespace cutil;
 #endif
 
 #ifndef CUTIL_TIMERFD_ENABLED
-int main() {
-  return 0;
-}
+int main() { return 0; }
 #else
 
 class MyPeriodicThread : public PeriodicThread {
-private:
+ private:
   int i;
   timeval tv, tv_p;
-protected:
+
+ protected:
   virtual void headFunc() {
     i = 0;
     cout << "headFunc()" << endl;
-   gettimeofday( &tv_p, NULL );
+    gettimeofday(&tv_p, NULL);
   }
   virtual void eachLoop() {
-    
-    gettimeofday( &tv, NULL );
-    double t = ( tv.tv_sec - tv_p.tv_sec ) * 1e6 + ( tv.tv_usec - tv_p.tv_usec );
-    
+    gettimeofday(&tv, NULL);
+    double t = (tv.tv_sec - tv_p.tv_sec) * 1e6 + (tv.tv_usec - tv_p.tv_usec);
+
     cout << t << endl;
     tv_p = tv;
 
     cout << "eachLoop() " << i << ", overrun " << getOverrun() << endl;
     i++;
-    if ( i > 5 ) {
+    if (i > 5) {
       cout << " thrown " << endl;
-      throw Exception( "In MyLoopThread", __EXCEPTION_INFO__ );
+      throw Exception("In MyLoopThread", __EXCEPTION_INFO__);
     }
-    usleep( 600000 );
+    usleep(600000);
   }
-  virtual void tailFunc() {
-    cout << "tailFunc()" << endl;
-  }
-public:
-  MyPeriodicThread( long period_usec ) 
-    : PeriodicThread( period_usec ) {}
-};
+  virtual void tailFunc() { cout << "tailFunc()" << endl; }
 
+ public:
+  explicit MyPeriodicThread(int64_t period_usec)
+      : PeriodicThread(period_usec) {}
+};
 
 int main() {
   try {
+    cout << "make periodic " << endl;
+    Thread::enterPeriodic(1000);
 
-  cout << "make periodic " << endl;
-  Thread::enterPeriodic( 1000 );
-  
-  
-  int i = 0;
-  timeval tv, tv_p;
-  gettimeofday( &tv_p, NULL );
+    int i = 0;
+    timeval tv, tv_p;
+    gettimeofday(&tv_p, NULL);
 
-  while ( i < 7 ) {
-    int overrun = Thread::waitPeriod();
-    
-    gettimeofday( &tv, NULL );
-    double t = ( tv.tv_sec - tv_p.tv_sec ) * 1e6 + ( tv.tv_usec - tv_p.tv_usec );
-    
-    cout << t << endl;
-    
-    tv_p = tv;
-    
-    cout << "period overrun " << overrun << endl;
-    ++i;
-  }
+    while (i < 7) {
+      int overrun = Thread::waitPeriod();
 
-  MyPeriodicThread pth( 500000 );
-  pth.start();
-  sleep( 4 );
-  }
-  catch ( const Exception &e ) {
+      gettimeofday(&tv, NULL);
+      double t = (tv.tv_sec - tv_p.tv_sec) * 1e6 + (tv.tv_usec - tv_p.tv_usec);
+
+      cout << t << endl;
+
+      tv_p = tv;
+
+      cout << "period overrun " << overrun << endl;
+      ++i;
+    }
+
+    MyPeriodicThread pth(500000);
+    pth.start();
+    sleep(4);
+  } catch (const Exception &e) {
     e.printStackTrace();
   }
-  
+
   return 0;
 }
 

@@ -1,6 +1,6 @@
 /**
- * $Id$
- * Copyright (c) 2013 Cota Nabeshima <cota@upard.org>
+ * $Id: Octree.h 3 2013-05-20 13:07:23Z cota@upard.org $
+ * Copyright (c) 2016 Cota Nabeshima <cota@upard.org>
  * This file is subject to the MIT license available at,
  * http://opensource.org/licenses/mit-license.php
  */
@@ -11,69 +11,73 @@
 #include <map>
 #include <vector>
 
-
 namespace cutil {
-  
+
 /*!
-  octree¥³¥ó¥Æ¥Ê.
-  
-  ¥â¡¼¥È¥ó½ç½ø¤òÍøÍÑ¤¹¤ë.
-  ºÂÉ¸¤Ï³Æ¼´0¤«¤éºÇÂçÃÍ2^MAX_LEVEL-1¤Ş¤Ç.
-  MAX_LEVEL¤Ï8¤Ş¤Ç.
+  octreeã‚³ãƒ³ãƒ†ãƒŠ.
+
+  ãƒ¢ãƒ¼ãƒˆãƒ³é †åºã‚’åˆ©ç”¨ã™ã‚‹.
+  åº§æ¨™ã¯å„è»¸0ã‹ã‚‰æœ€å¤§å€¤2^MAX_LEVEL-1ã¾ã§.
+  MAX_LEVELã¯8ã¾ã§.
 */
 
-template< class T, unsigned int MAX_LEVEL = 8 >
+template <class T, unsigned int MAX_LEVEL = 8>
 class Octree {
-private:
-  //! Ï¢ÁÛÇÛÎóÍÑ. ¥â¡¼¥È¥óÈÖ¹æ¤È¼ÂÇÛÎó¤Îindex¤È¤Î¥Ş¥Ã¥×. ¥ì¥Ù¥ë¤´¤È¤Ëºî¤ë.
-  std::map< unsigned int, unsigned int > indices[ MAX_LEVEL ];
-  
-  //! ¼ÂÂÎ.
-  std::vector< T > instances[ MAX_LEVEL ];
-  
-public:
-  //! ¥â¡¼¥È¥óÈÖ¹æ¤¬¤É¤Î¥ì¥Ù¥ë¤ÎÈÖ¹æ¤«¤òÊÖ¤¹.
-  static int level( unsigned int morton_number );
-  
-  //! ºÂÉ¸¤«¤é, ¥â¡¼¥È¥óÈÖ¹æ¤òÊÖ¤¹.
-  static unsigned int mortonNumber( unsigned char ix, unsigned char iy, unsigned char iz );
+ private:
+  //! é€£æƒ³é…åˆ—ç”¨. ãƒ¢ãƒ¼ãƒˆãƒ³ç•ªå·ã¨å®Ÿé…åˆ—ã®indexã¨ã®ãƒãƒƒãƒ—. ãƒ¬ãƒ™ãƒ«ã”ã¨ã«ä½œã‚‹.
+  std::map<unsigned int, unsigned int> indices[MAX_LEVEL];
 
-  //! ¥â¡¼¥È¥óÈÖ¹æ¤«¤é, ºÂÉ¸¤ËÌá¤¹.
-  static void position( unsigned int morton_number, unsigned char &ix, unsigned char &iy, unsigned char &iz );
-  
-  //! ¥â¡¼¥È¥óÈÖ¹æ¤ò¾åÊı¸ş¤Ë¥ì¥Ù¥ë¥·¥Õ¥È¤¹¤ë.
-  static unsigned int up( unsigned int morton_number );
-  
-  //! ¥â¡¼¥È¥óÈÖ¹æ¤ò²¼Êı¸ş¤Ë¥ì¥Ù¥ë¥·¥Õ¥È¤¹¤ë. ¤³¤ì¤Ë[0, 7]¤òÂ­¤·¤Æ»È¤¦.
-  static unsigned int down( unsigned int morton_number );
-  
-  //! Æ±¤¸¥ì¥Ù¥ë¤Î2¤Ä¤Î¥â¡¼¥È¥óÈÖ¹æ¤Ç¼¨¤µ¤ì¤ëÎÎ°è¤ò´Ş¤àÎÎ°è¤Î¥â¡¼¥È¥óÈÖ¹æ¤òÊÖ¤¹.
-  static unsigned int enclose( unsigned int morton_numberA, unsigned int morton_numberB );
-  
-  //! ¼ÂÂÎ¤Î²òÊü
+  //! å®Ÿä½“.
+  std::vector<T> instances[MAX_LEVEL];
+
+ public:
+  //! ãƒ¢ãƒ¼ãƒˆãƒ³ç•ªå·ãŒã©ã®ãƒ¬ãƒ™ãƒ«ã®ç•ªå·ã‹ã‚’è¿”ã™.
+  static int level(unsigned int morton_number);
+
+  //! åº§æ¨™ã‹ã‚‰, ãƒ¢ãƒ¼ãƒˆãƒ³ç•ªå·ã‚’è¿”ã™.
+  static unsigned int mortonNumber(unsigned char ix, unsigned char iy,
+                                   unsigned char iz);
+
+  //! ãƒ¢ãƒ¼ãƒˆãƒ³ç•ªå·ã‹ã‚‰, åº§æ¨™ã«æˆ»ã™.
+  static void position(unsigned int morton_number, unsigned char* ix,
+                       unsigned char* iy, unsigned char* iz);
+
+  //! ãƒ¢ãƒ¼ãƒˆãƒ³ç•ªå·ã‚’ä¸Šæ–¹å‘ã«ãƒ¬ãƒ™ãƒ«ã‚·ãƒ•ãƒˆã™ã‚‹.
+  static unsigned int up(unsigned int morton_number);
+
+  //! ãƒ¢ãƒ¼ãƒˆãƒ³ç•ªå·ã‚’ä¸‹æ–¹å‘ã«ãƒ¬ãƒ™ãƒ«ã‚·ãƒ•ãƒˆã™ã‚‹. ã“ã‚Œã«[0, 7]ã‚’è¶³ã—ã¦ä½¿ã†.
+  static unsigned int down(unsigned int morton_number);
+
+  //! åŒã˜ãƒ¬ãƒ™ãƒ«ã®2ã¤ã®ãƒ¢ãƒ¼ãƒˆãƒ³ç•ªå·ã§ç¤ºã•ã‚Œã‚‹é ˜åŸŸã‚’å«ã‚€é ˜åŸŸã®ãƒ¢ãƒ¼ãƒˆãƒ³ç•ªå·ã‚’è¿”ã™.
+  static unsigned int enclose(unsigned int morton_numberA,
+                              unsigned int morton_numberB);
+
+  //! å®Ÿä½“ã®è§£æ”¾
   void clear();
-  
-  //! ¼ÂÂÎ¤Î³ä¤êÅö¤Æ
-  T& assignInstance( unsigned int morton_number );  
-  
-  //! ¼ÂÂÎ¤Î³ä¤êÅö¤Æ
-  T& assignInstance( unsigned int level, unsigned char ix, unsigned char iy, unsigned char iz );  
-  
-  T& operator[]( unsigned int morton_number );
-  T& operator()( unsigned int morton_number );
-  T& operator()( unsigned int level, unsigned char ix, unsigned char iy, unsigned char iz );
-  
-  //! ¼ÂÂÎ¤ÎÍ×ÁÇ¿ô.
-  int size( int level = -1 ) const;
 
-  //! ¥­¡¼¤Èindex¤Î¥Ş¥Ã¥×¤ò¼èÆÀ.
-  const std::map< unsigned int, unsigned int >& indexMap( unsigned int level ) const;
-  
-  //! ¼ÂÂÎ¤Îvector¤ò¼èÆÀ.
-  const std::vector< T >& instanceVector( unsigned int level ) const;
+  //! å®Ÿä½“ã®å‰²ã‚Šå½“ã¦
+  T& assignInstance(unsigned int morton_number);
+
+  //! å®Ÿä½“ã®å‰²ã‚Šå½“ã¦
+  T& assignInstance(unsigned int level, unsigned char ix, unsigned char iy,
+                    unsigned char iz);
+
+  T& operator[](unsigned int morton_number);
+  T& operator()(unsigned int morton_number);
+  T& operator()(unsigned int level, unsigned char ix, unsigned char iy,
+                unsigned char iz);
+
+  //! å®Ÿä½“ã®è¦ç´ æ•°.
+  int size(int level = -1) const;
+
+  //! ã‚­ãƒ¼ã¨indexã®ãƒãƒƒãƒ—ã‚’å–å¾—.
+  const std::map<unsigned int, unsigned int>& indexMap(
+      unsigned int level) const;
+
+  //! å®Ÿä½“ã®vectorã‚’å–å¾—.
+  const std::vector<T>& instanceVector(unsigned int level) const;
 };
-
-}
+}  // namespace cutil
 
 #include "Octree.ipp"
 

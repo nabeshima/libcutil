@@ -1,6 +1,6 @@
 /**
- * $Id$
- * Copyright (c) 2013 Cota Nabeshima <cota@upard.org>
+ * $Id: Kinematics.h 3 2013-05-20 13:07:23Z cota@upard.org $
+ * Copyright (c) 2016 Cota Nabeshima <cota@upard.org>
  * This file is subject to the MIT license available at,
  * http://opensource.org/licenses/mit-license.php
  */
@@ -8,9 +8,7 @@
 #ifndef _COTAVE_KINEMATICS_H_
 #define _COTAVE_KINEMATICS_H_
 
-
 #include "CMatrix.h"
-
 
 namespace cotave {
 
@@ -18,187 +16,181 @@ class RotationMatrix;
 class Quaternion;
 typedef RotationMatrix Matrix33;
 
-
-class RowVector3: public CRowVector< 3, double > {
-public:
+class RowVector3 : public CRowVector<3, double> {
+ public:
   RowVector3();
-  RowVector3( double val );
-  RowVector3( const double *vals );
-  RowVector3( const CMatrix< 1, 3, double > &vec );
-  RowVector3( double c0, double c1, double c2 );
-  
-  //! ÆâÀÑ
-  double innerProduct( const RowVector3 &vec ) const;
+  explicit RowVector3(double val);
+  explicit RowVector3(const double *vals);
+  RowVector3(const CMatrix<1, 3, double> &vec);  // NOLINT
+  explicit RowVector3(double c0, double c1, double c2);
+
+  //! å†…ç©
+  double innerProduct(const RowVector3 &vec) const;
 };
 
-class ColumnVector3: public CColumnVector< 3, double > {
-public:
+class ColumnVector3 : public CColumnVector<3, double> {
+ public:
   ColumnVector3();
-  ColumnVector3( double val );
-  ColumnVector3( const double *vals );
-  ColumnVector3( const CMatrix< 3, 1, double > &vec );
-  ColumnVector3( double r0, double r1, double r2 );
-  
-  //! ÆâÀÑ
-  double innerProduct( const ColumnVector3 &vec ) const;
-  //! ³°ÀÑ (*this) x vec
-  ColumnVector3 outerProduct( const ColumnVector3 &vec ) const;
-  //! ³°ÀÑ (*this) x ¤ËÅù²Á¤Êskew symmetric matrix (R.transpose() == -R)
+  explicit ColumnVector3(double val);
+  explicit ColumnVector3(const double *vals);
+  ColumnVector3(const CMatrix<3, 1, double> &vec);  // NOLINT
+  explicit ColumnVector3(double r0, double r1, double r2);
+
+  //! å†…ç©
+  double innerProduct(const ColumnVector3 &vec) const;
+  //! å¤–ç© (*this) x vec
+  ColumnVector3 outerProduct(const ColumnVector3 &vec) const;
+  //! å¤–ç© (*this) x ã«ç­‰ä¾¡ãªskew symmetric matrix (R.transpose() == -R)
   RotationMatrix outerProduct() const;
-  
-  //! (*this)¤ò°ÌÃÖ¥Ù¥¯¥È¥ë¤È¤·¤Æ, R¤Ç²óÅ¾¤µ¤»¤ë.
-  ColumnVector3& rotate( const RotationMatrix &R );
-  //! (*this)¤ò°ÌÃÖ¥Ù¥¯¥È¥ë¤È¤·¤Æ, q¤Ç²óÅ¾¤µ¤»¤ë.
-  ColumnVector3& rotate( const Quaternion &q );
+
+  //! (*this)ã‚’ä½ç½®ãƒ™ã‚¯ãƒˆãƒ«ã¨ã—ã¦, Rã§å›è»¢ã•ã›ã‚‹.
+  ColumnVector3 &rotate(const RotationMatrix &R);
+  //! (*this)ã‚’ä½ç½®ãƒ™ã‚¯ãƒˆãƒ«ã¨ã—ã¦, qã§å›è»¢ã•ã›ã‚‹.
+  ColumnVector3 &rotate(const Quaternion &q);
 };
 
-//! ²óÅ¾¹ÔÎó
-class RotationMatrix: public CMatrix< 3, 3, double > {
-public:
-  static const RotationMatrix& E();
-  
-public:
+//! å›è»¢è¡Œåˆ—
+class RotationMatrix : public CMatrix<3, 3, double> {
+ public:
+  static const RotationMatrix &E();
+
+ public:
   RotationMatrix();
-  RotationMatrix( const double *vals );
-  RotationMatrix( const CMatrix< 3, 3, double > &mat );
-  RotationMatrix( double r00, double r01, double r02,
-                  double r10, double r11, double r12,
-                  double r20, double r21, double r22 );
-  RotationMatrix( const ColumnVector3 &axis, double angle );
-  RotationMatrix( const Quaternion &q );
-  RotationMatrix( double yaw, double pitch, double roll );
+  explicit RotationMatrix(const double *vals);
+  RotationMatrix(const CMatrix<3, 3, double> &mat);  // NOLINT
+  RotationMatrix(double r00, double r01, double r02, double r10, double r11,
+                 double r12, double r20, double r21, double r22);
+  explicit RotationMatrix(const ColumnVector3 &axis, double angle);
+  explicit RotationMatrix(const Quaternion &q);
+  RotationMatrix(double yaw, double pitch, double roll);
 
   //! optimally aproximation [Challis, 1995]
-  RotationMatrix& optimize();
-  
-  //! Gram-Schmidt orthonormalization   
-  RotationMatrix& orthonormalize();
-  
-  RowVector3 row( int r ) const;
-  ColumnVector3 col( int c ) const;
-  
-  //! (*this)¤¬Ä¾¸ò¹ÔÎó¤Ê¤³¤È¤ò²¾Äê¤·¤¿, quaternion¤Î½ĞÎÏ
-  Quaternion quaternion() const;
-  RotationMatrix& convertFromAxisAngle( const ColumnVector3 &axis, double angle );
-  //! ¥ª¥¤¥é¡¼³Ñ(Z-Y-X)¤«¤é¤ÎÊÑ´¹
-  RotationMatrix& convertFromEulerAngles( double yaw, double pitch, double roll );  
-  void convertToAxisAngle( ColumnVector3 &axis, double &angle ) const;
-  //! ¥ª¥¤¥é¡¼³Ñ(Z-Y-X)¤«¤é¤ÎÊÑ´¹
-  void convertToEulerAngles( double &yaw, double &pitch, double &roll ) const;
-  
-  /*!
-    \brief ³ÑÂ®ÅÙ¤«¤é»ş´ÖÈùÊ¬¤Ø¤ÎÊÑ´¹
-    
-    ¤³¤ÎRotationMatrix¤¬ÊªÂÎºÂÉ¸·Ï¤òÉ½¤¹»ÑÀª¹ÔÎó¤Ç¤¢¤ë¤È¤­,
-    ¥ï¡¼¥ë¥ÉºÂÉ¸·Ï¤«¤é¸«¤¿³ÑÂ®ÅÙomega¤ÇÊªÂÎºÂÉ¸·Ï¤¬²óÅ¾¤¹¤ë¤È¤­¤Î,²óÅ¾¹ÔÎó¤Î»ş´ÖÊÑ²½ÎÌ.
-    ¥ï¡¼¥ë¥ÉºÂÉ¸·Ï¤Çµ­½Ò.
-  */
-  RotationMatrix derivative( const ColumnVector3 &omega ) const;
-  
-  /*!
-    \brief »ş´ÖÈùÊ¬¤«¤é³ÑÂ®ÅÙ¤Ø¤ÎÊÑ´¹
-    
-    ¤³¤ÎRotationMatrix¤¬ÊªÂÎºÂÉ¸·Ï¤òÉ½¤¹¤È¤­,
-    ¥ï¡¼¥ë¥ÉºÂÉ¸·Ï¤Çµ­½Ò¤µ¤ì¤¿»ÑÀª¤Î»ş´ÖÊÑ²½ÎÌ¤«¤é,
-    ¥ï¡¼¥ë¥ÉºÂÉ¸·Ï¤«¤é¸«¤¿³ÑÂ®ÅÙomega¤ò·×»».
-  */  
-  ColumnVector3 omega( const RotationMatrix &derivative ) const;
+  RotationMatrix &optimize();
 
-  //! vec¤ò°ÌÃÖ¥Ù¥¯¥È¥ë¤È¤·¤Æ, (*this)¤Ç²óÅ¾¤µ¤»¤¿¥Ù¥¯¥È¥ë¤òÊÖ¤¹.
-  ColumnVector3 rotate( const ColumnVector3 &vec ) const;
-  
-  
+  //! Gram-Schmidt orthonormalization
+  RotationMatrix &orthonormalize();
+
+  RowVector3 row(int r) const;
+  ColumnVector3 col(int c) const;
+
+  //! (*this)ãŒç›´äº¤è¡Œåˆ—ãªã“ã¨ã‚’ä»®å®šã—ãŸ, quaternionã®å‡ºåŠ›
+  Quaternion quaternion() const;
+  RotationMatrix &convertFromAxisAngle(const ColumnVector3 &axis, double angle);
+  //! ã‚ªã‚¤ãƒ©ãƒ¼è§’(Z-Y-X)ã‹ã‚‰ã®å¤‰æ›
+  RotationMatrix &convertFromEulerAngles(double yaw, double pitch, double roll);
+  void convertToAxisAngle(ColumnVector3 *axis, double *angle) const;
+  //! ã‚ªã‚¤ãƒ©ãƒ¼è§’(Z-Y-X)ã‹ã‚‰ã®å¤‰æ›
+  void convertToEulerAngles(double *yaw, double *pitch, double *roll) const;
+
+  /*!
+    \brief è§’é€Ÿåº¦ã‹ã‚‰æ™‚é–“å¾®åˆ†ã¸ã®å¤‰æ›
+
+    ã“ã®RotationMatrixãŒç‰©ä½“åº§æ¨™ç³»ã‚’è¡¨ã™å§¿å‹¢è¡Œåˆ—ã§ã‚ã‚‹ã¨ã,
+    ãƒ¯ãƒ¼ãƒ«ãƒ‰åº§æ¨™ç³»ã‹ã‚‰è¦‹ãŸè§’é€Ÿåº¦omegaã§ç‰©ä½“åº§æ¨™ç³»ãŒå›è»¢ã™ã‚‹ã¨ãã®,å›è»¢è¡Œåˆ—ã®æ™‚é–“å¤‰åŒ–é‡.
+    ãƒ¯ãƒ¼ãƒ«ãƒ‰åº§æ¨™ç³»ã§è¨˜è¿°.
+  */
+  RotationMatrix derivative(const ColumnVector3 &omega) const;
+
+  /*!
+    \brief æ™‚é–“å¾®åˆ†ã‹ã‚‰è§’é€Ÿåº¦ã¸ã®å¤‰æ›
+
+    ã“ã®RotationMatrixãŒç‰©ä½“åº§æ¨™ç³»ã‚’è¡¨ã™ã¨ã,
+    ãƒ¯ãƒ¼ãƒ«ãƒ‰åº§æ¨™ç³»ã§è¨˜è¿°ã•ã‚ŒãŸå§¿å‹¢ã®æ™‚é–“å¤‰åŒ–é‡ã‹ã‚‰,
+    ãƒ¯ãƒ¼ãƒ«ãƒ‰åº§æ¨™ç³»ã‹ã‚‰è¦‹ãŸè§’é€Ÿåº¦omegaã‚’è¨ˆç®—.
+  */
+  ColumnVector3 omega(const RotationMatrix &derivative) const;
+
+  //! vecã‚’ä½ç½®ãƒ™ã‚¯ãƒˆãƒ«ã¨ã—ã¦, (*this)ã§å›è»¢ã•ã›ãŸãƒ™ã‚¯ãƒˆãƒ«ã‚’è¿”ã™.
+  ColumnVector3 rotate(const ColumnVector3 &vec) const;
+
   //---------------------------------------------------
   // not for rotation matrix but for general 3x3 matrix
-  //! ¹ÔÎó¼°
+  //! è¡Œåˆ—å¼
   double determinant() const;
-  //! µÕ¹ÔÎó. determinant¤ò»öÁ°¤Ë·×»»¤·¤Æ¤¢¤ë¤È¤­¤Ï°ú¿ô¤ËÅÏ¤¹.       
-  Matrix33 inverse( double determinant = 0.0 ) const;
-  
+  //! é€†è¡Œåˆ—. determinantã‚’äº‹å‰ã«è¨ˆç®—ã—ã¦ã‚ã‚‹ã¨ãã¯å¼•æ•°ã«æ¸¡ã™.
+  Matrix33 inverse(double determinant = 0.0) const;
+
   /*!
-    \brief ¥³¥ì¥¹¥­¡¼Ê¬²ò (cholesky decomposition). 
-    
-    ÀµÄêÃÍÂĞ¾Î¹ÔÎó¤Ç¤Ê¤¤¤È¤ª¤«¤·¤¤·ë²Ì¤Ë¤Ê¤ë. 
-    Ê¬»¶¶¦Ê¬»¶¹ÔÎó¤òÅÏ¤·¤Æ,Â¿¼¡¸µ¤ÎÀµµ¬´Ø¿ô¤òºî¤ë»ş¤Ë»ÈÍÑ.
-    ËÜÅö¤ÏLUÊ¬²ò¤Ç¤â²Ä¤À¤¬,¹âÂ®²½¤Î¤¿¤á.
-    
+    \brief ã‚³ãƒ¬ã‚¹ã‚­ãƒ¼åˆ†è§£ (cholesky decomposition).
+
+    æ­£å®šå€¤å¯¾ç§°è¡Œåˆ—ã§ãªã„ã¨ãŠã‹ã—ã„çµæœã«ãªã‚‹.
+    åˆ†æ•£å…±åˆ†æ•£è¡Œåˆ—ã‚’æ¸¡ã—ã¦,å¤šæ¬¡å…ƒã®æ­£è¦é–¢æ•°ã‚’ä½œã‚‹æ™‚ã«ä½¿ç”¨.
+    æœ¬å½“ã¯LUåˆ†è§£ã§ã‚‚å¯ã ãŒ,é«˜é€ŸåŒ–ã®ãŸã‚.
+
     M --> L * L.transpose()
-    ( L¤Ï²¼»°³Ñ¹ÔÎó )
+    ( Lã¯ä¸‹ä¸‰è§’è¡Œåˆ— )
   */
-  Matrix33 cholesky_decomposition( bool transpose_flag = false ) const;
+  Matrix33 cholesky_decomposition(bool transpose_flag = false) const;
 };
 
-
-//! ¥¯¥©¡¼¥¿¥Ë¥ª¥ó
-class Quaternion: public CColumnVector< 4, double > {
-public:
+//! ã‚¯ã‚©ãƒ¼ã‚¿ãƒ‹ã‚ªãƒ³
+class Quaternion : public CColumnVector<4, double> {
+ public:
   Quaternion();
-  Quaternion( const double *vals );
-  Quaternion( const CMatrix< 4, 1, double > &vec );
-  //! °ú¿ô¤òÍ×ÁÇ¤È¤·¤Æ½é´ü²½
-  Quaternion( double q0, double q1, double q2, double q3 );
-  //! a0¤ò¥¹¥«¥éÉôÊ¬,vec¤ò¥Ù¥¯¥¿ÉôÊ¬¤È¤·¤Æ½é´ü²½.
-  Quaternion( double q0, const CMatrix< 3, 1, double > &vec );  
-  //! ²óÅ¾¼´¤È²óÅ¾³Ñ¤Ç½é´ü²½ convertFromAxisAngle()
-  Quaternion( const ColumnVector3 &axis, double angle );
-  //! rodrigues¥Ñ¥é¥á¡¼¥¿¤Ç½é´ü²½
-  Quaternion( const ColumnVector3 &rodrigues );
-  //! ²óÅ¾¹ÔÎó¤Ç½é´ü²½
-  Quaternion( const RotationMatrix &rot );
-  
-  //! ¥¹¥«¥é¡¼À®Ê¬
-  double scalar() const;
-  //! ¥Ù¥¯¥È¥ëÀ®Ê¬
-  ColumnVector3 vector() const;
-  
-  //! ¶¦Ìò¥¯¥©¡¼¥¿¥Ë¥ª¥ó. Àµµ¬²½¤µ¤ì¤Æ¤¤¤ì¤ĞµÕ¥¯¥©¡¼¥¿¥Ë¥ª¥ó.
-  Quaternion conjugation() const;
-  
-  Quaternion& operator*=( const Quaternion &a );
+  explicit Quaternion(const double *vals);
+  Quaternion(const CMatrix<4, 1, double> &vec);  // NOLINT
+  //! å¼•æ•°ã‚’è¦ç´ ã¨ã—ã¦åˆæœŸåŒ–
+  Quaternion(double q0, double q1, double q2, double q3);
+  //! a0ã‚’ã‚¹ã‚«ãƒ©éƒ¨åˆ†,vecã‚’ãƒ™ã‚¯ã‚¿éƒ¨åˆ†ã¨ã—ã¦åˆæœŸåŒ–.
+  Quaternion(double q0, const CMatrix<3, 1, double> &vec);
+  //! å›è»¢è»¸ã¨å›è»¢è§’ã§åˆæœŸåŒ– convertFromAxisAngle()
+  Quaternion(const ColumnVector3 &axis, double angle);
+  //! rodriguesãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ã§åˆæœŸåŒ–
+  explicit Quaternion(const ColumnVector3 &rodrigues);
+  //! å›è»¢è¡Œåˆ—ã§åˆæœŸåŒ–
+  explicit Quaternion(const RotationMatrix &rot);
 
-  //! º¸¤«¤é¤ÎÀÑ±é»»¤ËÅù²Á¤Êskew symmetric matrix R (R.transpose() == -R): (*this) * q = R * q
-  CMatrix< 4, 4, double > leftProduct() const;
-  //! ±¦¤«¤é¤ÎÀÑ±é»»¤ËÅù²Á¤Êskew symmetric matrix R' (R'.transpose() == -R'): q * (*this) = R' * q
-  CMatrix< 4, 4, double > rightProduct() const;
-  
-  //! ¤³¤Îquaternion¤ËÁêÅö¤¹¤ë²óÅ¾¹ÔÎó¤ËÊÑ´¹.
+  //! ã‚¹ã‚«ãƒ©ãƒ¼æˆåˆ†
+  double scalar() const;
+  //! ãƒ™ã‚¯ãƒˆãƒ«æˆåˆ†
+  ColumnVector3 vector() const;
+
+  //! å…±å½¹ã‚¯ã‚©ãƒ¼ã‚¿ãƒ‹ã‚ªãƒ³. æ­£è¦åŒ–ã•ã‚Œã¦ã„ã‚Œã°é€†ã‚¯ã‚©ãƒ¼ã‚¿ãƒ‹ã‚ªãƒ³.
+  Quaternion conjugation() const;
+
+  Quaternion &operator*=(const Quaternion &a);
+
+  //! å·¦ã‹ã‚‰ã®ç©æ¼”ç®—ã«ç­‰ä¾¡ãªskew symmetric matrix R (R.transpose() == -R):
+  //! (*this) * q = R * q
+  CMatrix<4, 4, double> leftProduct() const;
+  //! å³ã‹ã‚‰ã®ç©æ¼”ç®—ã«ç­‰ä¾¡ãªskew symmetric matrix R' (R'.transpose() == -R'): q
+  //! * (*this) = R' * q
+  CMatrix<4, 4, double> rightProduct() const;
+
+  //! ã“ã®quaternionã«ç›¸å½“ã™ã‚‹å›è»¢è¡Œåˆ—ã«å¤‰æ›.
   RotationMatrix rotationMatrix() const;
 
-  //! ¤³¤Îquaternion¤ËÁêÅö¤¹¤ë¥í¥É¥ê¥²¥¹¥Ñ¥é¥á¡¼¥¿. (ÆÃ°ÛÅÀ¤Ï0)
+  //! ã“ã®quaternionã«ç›¸å½“ã™ã‚‹ãƒ­ãƒ‰ãƒªã‚²ã‚¹ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿. (ç‰¹ç•°ç‚¹ã¯0)
   ColumnVector3 rodriguesParameters() const;
-  
-  Quaternion& convertFromAxisAngle( const ColumnVector3 &axis, double angle );
-  void convertToAxisAngle( ColumnVector3 &axis, double &angle ) const;
-  
-    
-  /*!
-    \brief ³ÑÂ®ÅÙ¤«¤é»ş´ÖÈùÊ¬¤Ø¤ÎÊÑ´¹
-    
-    ¤³¤ÎQuaternion¤¬ÊªÂÎºÂÉ¸·Ï¤òÉ½¤¹¤È¤­,
-    ¥ï¡¼¥ë¥ÉºÂÉ¸·Ï¤«¤é¸«¤¿³ÑÂ®ÅÙomega¤ÇÊªÂÎºÂÉ¸·Ï¤¬²óÅ¾¤¹¤ë¤È¤­¤Î,¥¯¥©¡¼¥¿¥Ë¥ª¥ó¤Î»ş´ÖÊÑ²½ÎÌ.
-    ¥ï¡¼¥ë¥ÉºÂÉ¸·Ï¤Çµ­½Ò.
-  */
-  Quaternion derivative( const ColumnVector3 &omega ) const;
-  
-  /*!
-    \brief »ş´ÖÈùÊ¬¤«¤é³ÑÂ®ÅÙ¤Ø¤ÎÊÑ´¹
-    
-    ¤³¤ÎQuaternion¤¬ÊªÂÎºÂÉ¸·Ï¤òÉ½¤¹¤È¤­,
-    ¥ï¡¼¥ë¥ÉºÂÉ¸·Ï¤Çµ­½Ò¤µ¤ì¤¿ÊªÂÎºÂÉ¸·Ï¥¯¥©¡¼¥¿¥Ë¥ª¥ó¤Î»ş´ÖÊÑ²½ÎÌ¤«¤é,
-    ¥ï¡¼¥ë¥ÉºÂÉ¸·Ï¤«¤é¸«¤¿³ÑÂ®ÅÙomega¤ò·×»».
-  */  
-  ColumnVector3 omega( const Quaternion &derivative ) const;
 
-  //! vec¤ò°ÌÃÖ¥Ù¥¯¥È¥ë¤È¤·¤Æ, (*this)¤Ç²óÅ¾¤µ¤»¤¿¥Ù¥¯¥È¥ë¤òÊÖ¤¹.
-  ColumnVector3 rotate( const ColumnVector3 &vec ) const;
+  Quaternion &convertFromAxisAngle(const ColumnVector3 &axis, double angle);
+  void convertToAxisAngle(ColumnVector3 *axis, double *angle) const;
+
+  /*!
+    \brief è§’é€Ÿåº¦ã‹ã‚‰æ™‚é–“å¾®åˆ†ã¸ã®å¤‰æ›
+
+    ã“ã®QuaternionãŒç‰©ä½“åº§æ¨™ç³»ã‚’è¡¨ã™ã¨ã,
+    ãƒ¯ãƒ¼ãƒ«ãƒ‰åº§æ¨™ç³»ã‹ã‚‰è¦‹ãŸè§’é€Ÿåº¦omegaã§ç‰©ä½“åº§æ¨™ç³»ãŒå›è»¢ã™ã‚‹ã¨ãã®,ã‚¯ã‚©ãƒ¼ã‚¿ãƒ‹ã‚ªãƒ³ã®æ™‚é–“å¤‰åŒ–é‡.
+    ãƒ¯ãƒ¼ãƒ«ãƒ‰åº§æ¨™ç³»ã§è¨˜è¿°.
+  */
+  Quaternion derivative(const ColumnVector3 &omega) const;
+
+  /*!
+    \brief æ™‚é–“å¾®åˆ†ã‹ã‚‰è§’é€Ÿåº¦ã¸ã®å¤‰æ›
+
+    ã“ã®QuaternionãŒç‰©ä½“åº§æ¨™ç³»ã‚’è¡¨ã™ã¨ã,
+    ãƒ¯ãƒ¼ãƒ«ãƒ‰åº§æ¨™ç³»ã§è¨˜è¿°ã•ã‚ŒãŸç‰©ä½“åº§æ¨™ç³»ã‚¯ã‚©ãƒ¼ã‚¿ãƒ‹ã‚ªãƒ³ã®æ™‚é–“å¤‰åŒ–é‡ã‹ã‚‰,
+    ãƒ¯ãƒ¼ãƒ«ãƒ‰åº§æ¨™ç³»ã‹ã‚‰è¦‹ãŸè§’é€Ÿåº¦omegaã‚’è¨ˆç®—.
+  */
+  ColumnVector3 omega(const Quaternion &derivative) const;
+
+  //! vecã‚’ä½ç½®ãƒ™ã‚¯ãƒˆãƒ«ã¨ã—ã¦, (*this)ã§å›è»¢ã•ã›ãŸãƒ™ã‚¯ãƒˆãƒ«ã‚’è¿”ã™.
+  ColumnVector3 rotate(const ColumnVector3 &vec) const;
 };
 
-Quaternion operator*( const Quaternion &a, const Quaternion &b );
-
-
-}
+Quaternion operator*(const Quaternion &a, const Quaternion &b);
+}  // namespace cotave
 
 #include "Kinematics.ipp"
 
 #endif
-

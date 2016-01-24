@@ -1,6 +1,6 @@
 /**
- * $Id$
- * Copyright (c) 2013 Cota Nabeshima <cota@upard.org>
+ * $Id: Tokenizer.h 3 2013-05-20 13:07:23Z cota@upard.org $
+ * Copyright (c) 2016 Cota Nabeshima <cota@upard.org>
  * This file is subject to the MIT license available at,
  * http://opensource.org/licenses/mit-license.php
  */
@@ -13,45 +13,42 @@
 
 namespace cutil {
 
-class Tokenizer
-  : std::iterator< std::forward_iterator_tag, std::string > {
-  
-private:
+class Tokenizer : std::iterator<std::forward_iterator_tag, std::string> {
+ private:
   std::size_t seek;
   std::string delim;
   std::string orig;
   std::string token;
-  
-  bool operator==( const Tokenizer& opp ) const throw ();
-  bool operator!=( const Tokenizer& opp ) const throw ();
-  
-public:
-  Tokenizer() throw ();
-  Tokenizer( const std::string &orig, const std::string &delim = " ," ) throw ();
-  
-  Tokenizer( const Tokenizer &opp ) throw ();  
-  Tokenizer& operator=( const Tokenizer &opp ) throw ();
-  
-  // iterate to parse next token
-  Tokenizer& operator++() throw ();
-  std::string& operator*() throw ();
-  std::string* operator->() throw ();
-  
-  // set string to tokenize
-  void set( const std::string &orig, const std::string &delim = " ," ) throw ();
-  
-  // reset to tokenize string from head
-  void clear() throw ();
-  
-  // true if tokenization has finished 
-  bool isEmpty() const throw ();
-  
-  std::size_t getSeek() const throw ();
-  const std::string& getOriginal() const throw ();
-  const std::string& getDelimiter() const throw ();
-};
 
-}
+  bool operator==(const Tokenizer& opp) const;
+  bool operator!=(const Tokenizer& opp) const;
+
+ public:
+  Tokenizer();
+  explicit Tokenizer(const std::string& orig, const std::string& delim = " ,");
+
+  Tokenizer(const Tokenizer& opp);
+  Tokenizer& operator=(const Tokenizer& opp);
+
+  // iterate to parse next token
+  Tokenizer& operator++();
+  std::string& operator*();
+  std::string* operator->();
+
+  // set string to tokenize
+  void set(const std::string& orig, const std::string& delim = " ,");
+
+  // reset to tokenize string from head
+  void clear();
+
+  // true if tokenization has finished
+  bool isEmpty() const;
+
+  std::size_t getSeek() const;
+  const std::string& getOriginal() const;
+  const std::string& getDelimiter() const;
+};
+}  // namespace cutil
 
 #include "Tokenizer.ipp"
 

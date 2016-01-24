@@ -1,6 +1,6 @@
 /**
- * $Id$
- * Copyright (c) 2013 Cota Nabeshima <cota@upard.org>
+ * $Id: Cursor.h 3 2013-05-20 13:07:23Z cota@upard.org $
+ * Copyright (c) 2016 Cota Nabeshima <cota@upard.org>
  * This file is subject to the MIT license available at,
  * http://opensource.org/licenses/mit-license.php
  */
@@ -8,61 +8,54 @@
 #ifndef __CUTIL_CURSOR_H__
 #define __CUTIL_CURSOR_H__
 
-#include "CursorException.h"
-
-
 namespace cutil {
 
 class Cursor {
-private:
+ private:
   int x, y;
   int w, h;
   int foreground, background;
   bool strong, bar, underline, blink, reverse;
-  
-  void _getPosition() 
-    throw ( CursorException );
-  void _getWinSize() 
-    throw ( CursorException );  
 
-  void _setProperties() throw ();  
-  void _resetProperties() throw ();
-  
-  void _clear() throw ();  // buffer clear
-  
-  void _show() throw ();
-  void _hide() throw ();
-  void _move( int x, int y ) throw ();
+  bool _getPosition();
+  bool _getWinSize();
 
-  Cursor() throw ();
-  ~Cursor() throw ();
+  void _setProperties();
+  void _resetProperties();
 
-  
-  static Cursor& instance() throw ();
+  void _clear();  // buffer clear
 
-public:
+  void _show();
+  void _hide();
+  void _move(int x, int y);
+
+  Cursor();
+  ~Cursor();
+
+  static Cursor& instance();
+
+ public:
   enum { BLACK, RED, GREEN, YELLOW, BLUE, PURPLE, AQUA, WHITE };
 
-  static void setForeground( int color ) throw ();
-  static void setBackground( int color ) throw ();
+  static void setForeground(int color);
+  static void setBackground(int color);
 
-  static void setStrong( bool onoff ) throw ();
-  static void setBar( bool onoff ) throw ();
-  static void setUnderline( bool onoff ) throw ();
-  static void setBlink( bool onoff ) throw ();
-  static void setReverse( bool onoff ) throw ();
-  
-  static void resetProperties() throw ();
-  
-  static void move( int x, int y ) throw ();
-  static int getX() throw ();
-  static int getY() throw ();
-  
-  static int getWidth() throw ();
-  static int getHeight() throw ();
+  static void setStrong(bool onoff);
+  static void setBar(bool onoff);
+  static void setUnderline(bool onoff);
+  static void setBlink(bool onoff);
+  static void setReverse(bool onoff);
+
+  static void resetProperties();
+
+  static void move(int x, int y);
+  static int getX();
+  static int getY();
+
+  static int getWidth();
+  static int getHeight();
 };
-
-}
+}  // namespace cutil
 
 #include "Cursor.ipp"
 

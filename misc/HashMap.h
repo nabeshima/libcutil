@@ -1,6 +1,6 @@
 /**
- * $Id$
- * Copyright (c) 2013 Cota Nabeshima <cota@upard.org>
+ * $Id: HashMap.h 3 2013-05-20 13:07:23Z cota@upard.org $
+ * Copyright (c) 2016 Cota Nabeshima <cota@upard.org>
  * This file is subject to the MIT license available at,
  * http://opensource.org/licenses/mit-license.php
  */
@@ -12,6 +12,7 @@
 #include <iterator>
 #include <string>
 #include <map>
+#include <utility>
 
 namespace cutil {
 
@@ -19,101 +20,102 @@ namespace cutil {
   Simple hash function for string.
   The same algorithm as boost.
 */
-std::size_t hash( const std::string& value ) throw ();
-
+std::size_t hash(const std::string& value);
 
 /*!
   Simple hash map for string pairs.
 */
 class HashMap {
-public:
-  const static int BUCKET_SIZE = 1024 * 1024;
-  
-  
-  //---------------------------- Definition of iterators BEGIN ----------------------------
+ public:
+  static const int BUCKET_SIZE = 1024 * 1024;
+
+  //---------------------------- Definition of iterators BEGIN
+  //----------------------------
   class const_iterator;
-  
+
   //! iterator class
-  class iterator
-    : std::iterator< std::forward_iterator_tag, std::pair< const std::string, std::string > >  {
+  class iterator : std::iterator<std::forward_iterator_tag,
+                                 std::pair<const std::string, std::string> > {
     friend class HashMap;
     friend class const_iterator;
-    
-  private:
-    HashMap &hashmap;
+
+   private:
+    HashMap& hashmap;
     int bnum;
-    std::map< const std::string, std::string >::iterator mapIt;
-    
-    iterator( HashMap &hashmap, int bnum, 
-              std::map< const std::string, std::string >::iterator mapIt ) throw ();
-    iterator& operator=( const HashMap::iterator &opp ) throw ();
-    
-  public:
-    iterator( const HashMap::iterator &opp ) throw ();
-    
-    iterator& operator++() throw ();
-    std::pair< const std::string, std::string >& operator*() throw ();
-    std::pair< const std::string, std::string >* operator->() throw ();
-    
-    bool operator==( const HashMap::iterator &opp ) const throw ();
-    bool operator==( const HashMap::const_iterator &opp ) const throw ();
-    bool operator!=( const HashMap::iterator &opp ) const throw ();
-    bool operator!=( const HashMap::const_iterator &opp ) const throw ();
+    std::map<const std::string, std::string>::iterator mapIt;
+
+    iterator(HashMap* hashmap, int bnum,
+             std::map<const std::string, std::string>::iterator mapIt);
+    iterator& operator=(const HashMap::iterator& opp);
+
+   public:
+    iterator(const HashMap::iterator& opp);  // NOLINT
+
+    iterator& operator++();
+    std::pair<const std::string, std::string>& operator*();
+    std::pair<const std::string, std::string>* operator->();
+
+    bool operator==(const HashMap::iterator& opp) const;
+    bool operator==(const HashMap::const_iterator& opp) const;
+    bool operator!=(const HashMap::iterator& opp) const;
+    bool operator!=(const HashMap::const_iterator& opp) const;
   };
-  
+
   //! const_iterator class
   class const_iterator
-    : std::iterator< std::forward_iterator_tag, std::pair< const std::string, std::string > >  {
+      : std::iterator<std::forward_iterator_tag,
+                      std::pair<const std::string, std::string> > {
     friend class HashMap;
-    friend class iterator;
-    
-  private:
-    const HashMap &hashmap;
-    int bnum;
-    std::map< const std::string, std::string >::const_iterator mapIt;
-    
-    const_iterator( const HashMap &hashmap, int bnum, 
-                    std::map< const std::string, std::string >::const_iterator mapIt ) throw ();
-    const_iterator& operator=( const HashMap::iterator &opp ) throw ();
-    
-  public:
-    const_iterator( const HashMap::iterator &opp ) throw ();
-    
-    const_iterator& operator++() throw ();
-    const std::pair< const std::string, std::string >& operator*() const throw ();
-    const std::pair< const std::string, std::string >* operator->() const throw ();
-    
-    bool operator==( const HashMap::iterator& opp ) const throw ();
-    bool operator==( const HashMap::const_iterator& opp ) const throw ();
-    bool operator!=( const HashMap::iterator& opp ) const throw ();
-    bool operator!=( const HashMap::const_iterator& opp ) const throw ();
-  };  
-  //---------------------------- Definition of iterators END ----------------------------
-  
-private:
-  std::map< const std::string, std::string > *bucket;
-  
-public:
-  HashMap();  
-  ~HashMap();
-  
-  void add( const std::string& key, const std::string& value ) throw ();
-  std::string remove( const std::string& key ) throw ();
-  void clear() throw ();
-  
-  HashMap::iterator begin() throw ();
-  HashMap::iterator end() throw ();
-  HashMap::iterator at( const std::string& key ) throw ();
-  
-  HashMap::const_iterator begin() const throw ();
-  HashMap::const_iterator end() const throw ();
-  HashMap::const_iterator at( const std::string& key ) const throw ();
-  
-  std::string& operator[]( const std::string& key ) throw ();
-  const std::string& operator[]( const std::string& key ) const throw ();
-};
+    friend struct iterator;
 
-}
+   private:
+    const HashMap& hashmap;
+    int bnum;
+    std::map<const std::string, std::string>::const_iterator mapIt;
+
+    const_iterator(
+        const HashMap& hashmap, int bnum,
+        std::map<const std::string, std::string>::const_iterator mapIt);
+    const_iterator& operator=(const HashMap::iterator& opp);
+
+   public:
+    const_iterator(const HashMap::iterator& opp);  // NOLINT
+
+    const_iterator& operator++();
+    const std::pair<const std::string, std::string>& operator*() const;
+    const std::pair<const std::string, std::string>* operator->() const;
+
+    bool operator==(const HashMap::iterator& opp) const;
+    bool operator==(const HashMap::const_iterator& opp) const;
+    bool operator!=(const HashMap::iterator& opp) const;
+    bool operator!=(const HashMap::const_iterator& opp) const;
+  };
+  //---------------------------- Definition of iterators END
+  //----------------------------
+
+ private:
+  std::map<const std::string, std::string>* bucket;
+
+ public:
+  HashMap();
+  ~HashMap();
+
+  void add(const std::string& key, const std::string& value);
+  std::string remove(const std::string& key);
+  void clear();
+
+  HashMap::iterator begin();
+  HashMap::iterator end();
+  HashMap::iterator at(const std::string& key);
+
+  HashMap::const_iterator begin() const;
+  HashMap::const_iterator end() const;
+  HashMap::const_iterator at(const std::string& key) const;
+
+  std::string& operator[](const std::string& key);
+  const std::string& operator[](const std::string& key) const;
+};
+}  // namespace cutil
 
 #include "HashMap.ipp"
 

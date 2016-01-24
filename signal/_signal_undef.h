@@ -1,11 +1,11 @@
 /**
- * $Id$
- * Copyright (c) 2013 Cota Nabeshima <cota@upard.org>
+ * $Id: _signal_undef.h 3 2013-05-20 13:07:23Z cota@upard.org $
+ * Copyright (c) 2016 Cota Nabeshima <cota@upard.org>
  * This file is subject to the MIT license available at,
  * http://opensource.org/licenses/mit-license.php
  */
 
-#undef CUTIL_SIGNAL_clP0 
+#undef CUTIL_SIGNAL_clP0
 #undef CUTIL_SIGNAL_clP1
 #undef CUTIL_SIGNAL_clP2
 #undef CUTIL_SIGNAL_clP3
@@ -16,7 +16,7 @@
 #undef CUTIL_SIGNAL_clP8
 #undef CUTIL_SIGNAL_clP9
 
-#undef CUTIL_SIGNAL_P0 
+#undef CUTIL_SIGNAL_P0
 #undef CUTIL_SIGNAL_P1
 #undef CUTIL_SIGNAL_P2
 #undef CUTIL_SIGNAL_P3
@@ -27,7 +27,7 @@
 #undef CUTIL_SIGNAL_P8
 #undef CUTIL_SIGNAL_P9
 
-#undef CUTIL_SIGNAL_Pp0 
+#undef CUTIL_SIGNAL_Pp0
 #undef CUTIL_SIGNAL_Pp1
 #undef CUTIL_SIGNAL_Pp2
 #undef CUTIL_SIGNAL_Pp3
@@ -38,7 +38,7 @@
 #undef CUTIL_SIGNAL_Pp8
 #undef CUTIL_SIGNAL_Pp9
 
-#undef CUTIL_SIGNAL_p0 
+#undef CUTIL_SIGNAL_p0
 #undef CUTIL_SIGNAL_p1
 #undef CUTIL_SIGNAL_p2
 #undef CUTIL_SIGNAL_p3

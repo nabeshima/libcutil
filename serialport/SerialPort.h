@@ -1,6 +1,6 @@
 /**
- * $Id$
- * Copyright (c) 2013 Cota Nabeshima <cota@upard.org>
+ * $Id: SerialPort.h 9 2013-10-10 02:13:07Z cota@upard.org $
+ * Copyright (c) 2016 Cota Nabeshima <cota@upard.org>
  * This file is subject to the MIT license available at,
  * http://opensource.org/licenses/mit-license.php
  */
@@ -10,8 +10,7 @@
 
 #include <string>
 
-#include "_serialport_config.h"
-#include "SerialPortException.h"
+#include "./_serialport_config.h"
 
 namespace cutil {
 
@@ -20,50 +19,39 @@ namespace cutil {
 */
 
 class SerialPort {
-private:
+ private:
   int fd;
   termios pre_term_attr;
 
-  void _close() throw ();
+  void _close();
 
-public:
-  SerialPort() throw ();
-  ~SerialPort() throw ();
-  
-  bool open( const std::string& portname,
-	     int baudrate,
-	     DataBit databit = EIGHT,
-	     ParityBit paritybit = NONE,
-	     StopBit stopbit = ONE,
-	     bool hardware_control = false )
-    throw ( SerialPortException );
-  
-  void close() 
-    throw ( SerialPortException );
-  
-  bool isOpen() const throw ();
-  
-  
-  bool isReadable( uint64_t timeout_usec = 0 )
-    throw ( SerialPortException, SerialPortTimeoutException );  
+ public:
+  SerialPort();
+  ~SerialPort();
 
-  int read( void *data, int size ) throw ();  
-  
-  bool isWritable( uint64_t timeout_usec = 0 )
-    throw ( SerialPortException, SerialPortTimeoutException );
+  bool open(const std::string &portname, int baudrate, DataBit databit = EIGHT,
+            ParityBit paritybit = NONE, StopBit stopbit = ONE,
+            bool hardware_control = false);
 
-  int write( const void *data, int size ) throw ();
+  bool close();
 
-  int bytesInReadBuffer() 
-    throw ( SerialPortException );
+  bool isOpen() const;
 
-  void flushReadBuffer() throw ();
-  void flushWriteBuffer() throw ();
+  bool isReadable(uint64_t timeout_usec = 0);
+
+  int read(void *data, int size);
+
+  bool isWritable(uint64_t timeout_usec = 0);
+
+  int write(const void *data, int size);
+
+  int bytesInReadBuffer();
+
+  void flushReadBuffer();
+  void flushWriteBuffer();
 };
-
-}
+}  // namespace cutil
 
 #include "SerialPort.ipp"
 
 #endif
-

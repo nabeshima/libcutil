@@ -1,6 +1,6 @@
 /**
- * $Id$
- * Copyright (c) 2013 Cota Nabeshima <cota@upard.org>
+ * $Id: PingClient.h 3 2013-05-20 13:07:23Z cota@upard.org $
+ * Copyright (c) 2016 Cota Nabeshima <cota@upard.org>
  * This file is subject to the MIT license available at,
  * http://opensource.org/licenses/mit-license.php
  */
@@ -10,21 +10,16 @@
 
 #include "Socket.h"
 
-
 namespace cutil {
 
 class PingClient {
-public:
-  static unsigned short checksum( unsigned short *buf, int size ) throw ();
-  static bool ping( const Address &peer, uint64_t timeout_usec = 0 )
-    throw ( SocketException, SocketTimeoutException );
+ public:
+  static uint16_t checksum(uint16_t *buf, int size);
+  static bool ping(const Address &peer, uint64_t timeout_usec = 0);
 };
 
-}
+}  // namespace cutil
 
-// #ifndef _NO_INLINE_
-#define _INLINE_ inline
 #include "PingClient.ipp"
-// #endif
 
 #endif
