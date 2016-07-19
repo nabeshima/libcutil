@@ -8,13 +8,12 @@
 #ifndef _CUTIL_IOSTREAM_H_
 #define _CUTIL_IOSTREAM_H_
 
-#include <string>
 #include <ios>        //! streamsize
 #include <iostream>   //! iostream
 #include <streambuf>  //! basic_streambuf
+#include <string>
 
 namespace cutil {
-
 template <class T>
 class StreamBuf : public std::streambuf {
  private:

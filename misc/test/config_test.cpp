@@ -5,10 +5,10 @@
  * http://opensource.org/licenses/mit-license.php
  */
 
+#include <ConfigFileReader.h>
 #include <iostream>
 #include <map>
 #include <string>
-#include <ConfigFileReader.h>
 
 using namespace std;
 using namespace cutil;

@@ -12,12 +12,8 @@ all:
 test:
 	( cd test; $(MAKE) test )
 
-doc:
-	( cd doc && $(MAKE) doc )
-
 clean distclean:
 	find . -name "*~" -exec rm {} \;
 	find . -name ".#*" -exec rm {} \;
 	( cd test && $(MAKE) $@ )
-	( cd doc && $(MAKE) $@ ) 
 

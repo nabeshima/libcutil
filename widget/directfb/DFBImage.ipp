@@ -9,52 +9,33 @@
 
 namespace cutil {
 
-inline
-DFBImage::DFBImage() 
-  : provider( NULL ) {}
+inline DFBImage::DFBImage() : provider(NULL) {}
 
-inline
-DFBImage::DFBImage( const char *filename ) {
-  open( filename );
-}
+inline DFBImage::DFBImage(const char *filename) { open(filename); }
 
-inline
-DFBImage::~DFBImage() {
-  close();
-}
+inline DFBImage::~DFBImage() { close(); }
 
-inline 
-bool DFBImage::open( const char *filename ) {
-  if ( isOpen() ) {
+inline bool DFBImage::open(const char *filename) {
+  if (isOpen()) {
     return false;
   }
 
   IDirectFB *dfb = DFBEventThread::getDFB();
 
-  bool ret = ( DFB_OK ==
-	       dfb->CreateImageProvider( dfb,
-                                         filename,
-                                         &provider ) );
-  if ( !ret ) {
+  bool ret = (DFB_OK == dfb->CreateImageProvider(dfb, filename, &provider));
+  if (!ret) {
     provider = NULL;
   }
 
   return ret;
 }
 
-inline
-void DFBImage::close() {
-  if ( isOpen() ) {
-    provider->Release( provider );
+inline void DFBImage::close() {
+  if (isOpen()) {
+    provider->Release(provider);
     provider = NULL;
   }
 }
 
-inline
-bool DFBImage::isOpen() {
-  return provider != NULL;
-}
-
-
-
+inline bool DFBImage::isOpen() { return provider != NULL; }
 }

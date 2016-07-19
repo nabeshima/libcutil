@@ -10,6 +10,7 @@
 
 extern "C" {
 #include <pthread.h>
+#include <stdint.h>
 }
 
 #ifdef linux
@@ -18,8 +19,6 @@ extern "C" {
 // #define CUTIL_TIMERFD_ENABLED
 #endif
 #endif
-
-#include <map>
 
 namespace cutil {
 
@@ -104,7 +103,13 @@ class Thread {
 
   explicit Thread(pthread_t tid);
 
-  static std::map<pthread_t, int> &timerfdMap();
+#ifdef CUTIL_TIMERFD_ENABLED
+  int timer_fd;
+#endif
+
+#ifdef CUTIL_RT_ENABLED
+  timespec prev_ts;
+#endif
 
  public:
   Thread();
@@ -138,10 +143,17 @@ class Thread {
   static Thread self();
 
 #ifdef CUTIL_TIMERFD_ENABLED
-  static bool enterPeriodic(int64_t period_usec);
-  static bool setPeriod(int64_t period_usec);
-  static int waitPeriod();
-  static bool exitPeriodic();
+  bool enterPeriodic();
+  bool setPeriod(int64_t period_usec);
+  int waitPeriod();
+  bool exitPeriodic();
+#endif
+
+#ifdef CUTIL_RT_ENABLED
+  bool enterRealtime();
+  // return overrun usec. return 0 when succeeded. return negative values when
+  // error occurs.
+  int64_t waitNext(int64_t period_usec);
 #endif
 };
 
@@ -218,10 +230,30 @@ class PeriodicThread : public LoopThreadBase {
 };
 
 #endif
+
+#ifdef CUTIL_RT_ENABLED
+
+class RealtimeThread : public LoopThreadBase {
+ private:
+  volatile int64_t period_usec;
+  volatile int overrun;
+
+ public:
+  explicit RealtimeThread(int64_t period_usec);
+  virtual ~RealtimeThread();
+
+  virtual void operator()();
+
+ protected:
+  virtual void sleepFunc();
+
+ protected:
+  int getOverrun() const;
+};
+#endif
+
 }  // namespace cutil
 
 #include "Thread.ipp"
-
-#undef CUTIL_TIMERFD_ENABLED
 
 #endif

@@ -77,8 +77,7 @@ inline std::streambuf::int_type StreamBuf<T>::underflow() {
 }
 
 template <class T>
-inline IOStream<T>::IOStream(T *t)
-    : std::iostream(0), t(t), sbuf(t) {
+inline IOStream<T>::IOStream(T *t) : std::iostream(0), t(t), sbuf(t) {
   rdbuf(&sbuf);
 
   //   if( !t->isOpen() ) {
@@ -92,8 +91,7 @@ inline IOStream<T>::~IOStream() {
 }
 
 template <class T>
-inline OStream<T>::OStream(T *t)
-    : std::ostream(0), t(t), sbuf(t) {
+inline OStream<T>::OStream(T *t) : std::ostream(0), t(t), sbuf(t) {
   rdbuf(&sbuf);
 
   //   if( !t->isOpen() ) {
@@ -107,8 +105,7 @@ inline OStream<T>::~OStream() {
 }
 
 template <class T>
-inline IStream<T>::IStream(T *t)
-    : std::istream(0), t(t), sbuf(t) {
+inline IStream<T>::IStream(T *t) : std::istream(0), t(t), sbuf(t) {
   rdbuf(&sbuf);
 
   //   if( !t->isOpen() ) {

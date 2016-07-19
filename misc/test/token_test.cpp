@@ -5,42 +5,127 @@
  * http://opensource.org/licenses/mit-license.php
  */
 
-#include <iostream>
 #include <Tokenizer.h>
+#include <iostream>
 
 using namespace std;
 using namespace cutil;
 
 int main() {
-  Tokenizer tok;
+  {
+    Tokenizer tok;
 
-  tok.set("   swarfwa,fw2afeにんご　\"\"a,fff, :s:k,,,,  ,,,,. ", ": ,");
+    tok.set("   swarfwa,fw2afeにんご　\"\"a,fff, :s:k,,,,  ,,,,. ", ": ,");
 
-  while (!tok.isEmpty()) {
-    cout << *tok << endl;
-    ++tok;
+    while (!tok.isEmpty()) {
+      cout << *tok << endl;
+      ++tok;
+    }
+
+    tok.set("   swarfwa,fw2afeにんご　\"\"a,fff, :s:k,,,,  ,,,,. ,,\",,,\"gg",
+            ": ,");
+
+    while (!tok.isEmpty()) {
+      cout << *tok << endl;
+      ++tok;
+    }
+
+    tok.set(", ,    ", ": ,");
+
+    while (!tok.isEmpty()) {
+      cout << *tok << endl;
+      ++tok;
+    }
+
+    tok.set("", ": ,", true);
+
+    while (!tok.isEmpty()) {
+      cout << *tok << endl;
+      ++tok;
+    }
+
+    tok.set(",,a.,,", ": ,", true);
+
+    while (!tok.isEmpty()) {
+      cout << *tok << endl;
+      ++tok;
+    }
+
+    tok.set(" ,b.,,", ": ,", false);
+
+    while (!tok.isEmpty()) {
+      cout << *tok << endl;
+      ++tok;
+    }
   }
 
-  tok.set("   swarfwa,fw2afeにんご　\"\"a,fff, :s:k,,,,  ,,,,. ,,\",,,\"gg",
-          ": ,");
+  {
+    Tokenizer tok;
 
-  while (!tok.isEmpty()) {
-    cout << *tok << endl;
-    ++tok;
-  }
+    tok.set("   swarfwa,fw2afeにんご　\"\"a,fff, :s:k,,,,  ,,,,. ", ": ,", true,
+            '\\');
 
-  tok.set(", ,    ", ": ,");
+    while (!tok.isEmpty()) {
+      cout << *tok << endl;
+      ++tok;
+    }
 
-  while (!tok.isEmpty()) {
-    cout << *tok << endl;
-    ++tok;
-  }
+    tok.set("   swarfwa,fw2afeにんご　\"\"a,fff, :s:k,,,,  ,,,,. ,,\",,,\"gg",
+            ": ,", false, '\\');
 
-  tok.set("", ": ,");
+    while (!tok.isEmpty()) {
+      cout << *tok << endl;
+      ++tok;
+    }
 
-  while (!tok.isEmpty()) {
-    cout << *tok << endl;
-    ++tok;
+    tok.set(", ,    ", ": ,", true);
+
+    while (!tok.isEmpty()) {
+      cout << *tok << endl;
+      ++tok;
+    }
+
+    cout << "skip test skip delim" << endl;
+
+    tok.set("\\\\,\\,pgggg:, ", ": ,", false);
+
+    while (!tok.isEmpty()) {
+      cout << *tok << endl;
+      ++tok;
+    }
+
+    cout << "skip test keep delim" << endl;
+
+    tok.set("\\\\,\\,pgggg:, ", ": ,", true);
+
+    while (!tok.isEmpty()) {
+      cout << *tok << endl;
+      ++tok;
+    }
+    cout << "escape test skip delim" << endl;
+
+    tok.set("\\\\,\\,pgggg:, ", ": ,", false, '\\');
+
+    while (!tok.isEmpty()) {
+      cout << *tok << endl;
+      ++tok;
+    }
+
+    cout << "escape test keep delim" << endl;
+
+    tok.set("\\\\,\\,pgggg:, ", ": ,", true, '\\');
+
+    while (!tok.isEmpty()) {
+      cout << *tok << endl;
+      ++tok;
+    }
+
+    tok.set("", ": ,", true);
+
+    while (!tok.isEmpty()) {
+      cout << *tok << endl;
+      ++tok;
+    }
   }
 
   return 0;

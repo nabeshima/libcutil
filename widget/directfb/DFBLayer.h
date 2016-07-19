@@ -15,29 +15,28 @@ extern "C" {
 namespace cutil {
 
 class DFBSurface;
-  
+
 class DFBLayer {
   friend class DFBWidget;
 
-private:
-  IDirectFBDisplayLayer *layer;
+ private:
+  IDirectFBDisplayLayer* layer;
   DFBDisplayLayerConfig layer_config;
-  
+
   //! non-copiable
-  DFBLayer( const DFBLayer& );
-  DFBLayer& operator=( const DFBLayer& );
-    
-public:
+  DFBLayer(const DFBLayer&);
+  DFBLayer& operator=(const DFBLayer&);
+
+ public:
   DFBLayer();
   ~DFBLayer();
-  
+
   int getWidth();
   int getHeight();
 
-  void setBackground( const DFBSurface &surface );
+  void setBackground(const DFBSurface& surface);
 };
-
-}
+}  // namespace cutil
 
 #include "DFBLayer.ipp"
 

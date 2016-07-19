@@ -8,10 +8,10 @@
 #ifndef _CUTIL_CONFIGFILEREADER_H_
 #define _CUTIL_CONFIGFILEREADER_H_
 
-#include <fstream>
-#include <string>
-#include <map>
 #include <deque>
+#include <fstream>
+#include <map>
+#include <string>
 #include <utility>
 
 namespace cutil {

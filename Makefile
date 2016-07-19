@@ -15,11 +15,14 @@ HEADERS=\
 	`find . -name *.h` \
 	`find . -name *.ipp`
 
-EVERYTHING=all doc test
+EVERYTHING=all test
 .PHONY: test doc
 
 $(EVERYTHING):
 	@for subdir in $(SUBDIRS); do ( cd $$subdir && $(MAKE) $@ ); done
+
+doc:
+	( cd doc && $(MAKE) $@ )
 
 install:
 	mkdir -p $(INSTALLPATH)/lib $(INSTALLPATH)/include/$(LIBNAME)
@@ -32,3 +35,4 @@ clean distclean:
 	find . -name "*~" -exec rm {} \;
 	find . -name ".#*" -exec rm {} \;
 	@for subdir in $(SUBDIRS); do ( cd $$subdir && $(MAKE) $@ ); done
+	( cd doc && $(MAKE) $@ )

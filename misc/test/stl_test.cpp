@@ -5,9 +5,9 @@
  * http://opensource.org/licenses/mit-license.php
  */
 
+#include <STLFileIO.h>
 #include <iostream>
 #include <vector>
-#include <STLFileIO.h>
 
 using namespace std;
 using namespace cutil;

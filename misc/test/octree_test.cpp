@@ -8,8 +8,8 @@
 #include <Octree.h>
 
 #include <iostream>
-#include <vector>
 #include <map>
+#include <vector>
 
 using namespace std;
 using namespace cutil;

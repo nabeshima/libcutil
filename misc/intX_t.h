@@ -12,8 +12,8 @@ extern "C" {
 #include <stdint.h>
 }
 
-#include <vector>
 #include <string>
+#include <vector>
 
 namespace cutil {
 

@@ -17,25 +17,24 @@ namespace cutil {
 class DFBImage {
   friend class DFBSurface;
 
-private:
-  IDirectFBImageProvider *provider;
-  
+ private:
+  IDirectFBImageProvider* provider;
+
   //! non-copiable
-  DFBImage( const DFBImage& );
-  DFBImage& operator=( const DFBImage& );
-  
-public:
-  DFBImage(); 
-  DFBImage( const char *filename ); 
+  DFBImage(const DFBImage&);
+  DFBImage& operator=(const DFBImage&);
+
+ public:
+  DFBImage();
+  explicit DFBImage(const char* filename);
   ~DFBImage();
 
-  bool open( const char *filename );
+  bool open(const char* filename);
   void close();
-  
+
   bool isOpen();
 };
-
-}
+}  // namespace cutil
 
 #include "DFBImage.ipp"
 

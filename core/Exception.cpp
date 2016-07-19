@@ -6,13 +6,13 @@
  */
 
 extern "C" {
-#include <execinfo.h>
 #include <cxxabi.h>
+#include <execinfo.h>
 }
 
 #include "Exception.h"
 
-using cutil;
+    using cutil;
 
 //#########################################
 

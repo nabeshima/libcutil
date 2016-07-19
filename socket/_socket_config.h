@@ -20,20 +20,20 @@
 #include <WinSock2.h>
 #pragma comment(lib, "ws2_32.lib")
 #else
-#include <sys/socket.h>
-#include <sys/un.h>
-#include <sys/ioctl.h>
+#include <arpa/inet.h>
+#include <errno.h>
+#include <fcntl.h>
+#include <net/ethernet.h>
+#include <netdb.h>
 #include <netinet/in.h>
 #include <netinet/in_systm.h>
 #include <netinet/ip.h>
 #include <netinet/ip_icmp.h>
-#include <net/ethernet.h>
-#include <arpa/inet.h>
-#include <netdb.h>
 #include <resolv.h>
+#include <sys/ioctl.h>
+#include <sys/socket.h>
+#include <sys/un.h>
 #include <unistd.h>
-#include <fcntl.h>
-#include <errno.h>
 #endif
 
 #include <algorithm>

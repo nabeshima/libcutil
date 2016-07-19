@@ -16,29 +16,28 @@ namespace cutil {
 
 class DFBFont {
   friend class DFBSurface;
-  
-private:
+
+ private:
   IDirectFBFont *font;
 
   //! non-copiable
-  DFBFont( const DFBFont& );
-  DFBFont& operator=( const DFBFont& );
+  DFBFont(const DFBFont &);
+  DFBFont &operator=(const DFBFont &);
 
-public:
-  DFBFont(); 
-  DFBFont( const char *font_filename, int font_height ); 
+ public:
+  DFBFont();
+  DFBFont(const char *font_filename, int font_height);
   ~DFBFont();
 
-  bool open( const char *font_filename, int font_height );
+  bool open(const char *font_filename, int font_height);
   void close();
-  
+
   bool isOpen();
 
   int getHeight();
-  int getWidth( const char *str );
+  int getWidth(const char *str);
 };
-
-}
+}  // namespace cutil
 
 #include "DFBFont.ipp"
 

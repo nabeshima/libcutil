@@ -389,39 +389,33 @@ int main() {
 
     vector<pair<ColumnVector3, ColumnVector3> > data;
 
-    data.push_back(pair<ColumnVector3, ColumnVector3>(
-        ColumnVector3(1, 1, 0.2),
-        scale * rot * ColumnVector3(1, 1, 0.2) + trans));
-    data.push_back(pair<ColumnVector3, ColumnVector3>(
-        ColumnVector3(1, 0, 0), scale * rot * ColumnVector3(1, 0, 0) + trans));
-    data.push_back(pair<ColumnVector3, ColumnVector3>(
-        ColumnVector3(11, 8, 0),
-        scale * rot * ColumnVector3(11, 8, 0) + trans));
-    data.push_back(pair<ColumnVector3, ColumnVector3>(
-        ColumnVector3(1, 8, 0.9),
-        scale * rot * ColumnVector3(1, 8, 0.9) + trans));
-    data.push_back(pair<ColumnVector3, ColumnVector3>(
-        ColumnVector3(0.2, -9, 0.9),
-        scale * rot * ColumnVector3(0.2, -9, 0.9) + trans));
-    data.push_back(pair<ColumnVector3, ColumnVector3>(
-        ColumnVector3(0.1, -9, 0.91),
-        scale * rot * ColumnVector3(0.1, -9, 0.91) + trans));
-    data.push_back(pair<ColumnVector3, ColumnVector3>(
-        ColumnVector3(0.2, -9, 0.91),
-        scale * rot * ColumnVector3(0.2, -9, 0.91) + trans));
-    data.push_back(pair<ColumnVector3, ColumnVector3>(
-        ColumnVector3(102, 9, 1),
-        scale * rot * ColumnVector3(102, 9, 1) + trans));
+    data.push_back(make_pair(ColumnVector3(1, 1, 0.2),
+                             scale * rot * ColumnVector3(1, 1, 0.2) + trans));
+    data.push_back(make_pair(ColumnVector3(1, 0, 0),
+                             scale * rot * ColumnVector3(1, 0, 0) + trans));
+    data.push_back(make_pair(ColumnVector3(11, 8, 0),
+                             scale * rot * ColumnVector3(11, 8, 0) + trans));
+    data.push_back(make_pair(ColumnVector3(1, 8, 0.9),
+                             scale * rot * ColumnVector3(1, 8, 0.9) + trans));
+    data.push_back(
+        make_pair(ColumnVector3(0.2, -9, 0.9),
+                  scale * rot * ColumnVector3(0.2, -9, 0.9) + trans));
+    data.push_back(
+        make_pair(ColumnVector3(0.1, -9, 0.91),
+                  scale * rot * ColumnVector3(0.1, -9, 0.91) + trans));
+    data.push_back(
+        make_pair(ColumnVector3(0.2, -9, 0.91),
+                  scale * rot * ColumnVector3(0.2, -9, 0.91) + trans));
+    data.push_back(make_pair(ColumnVector3(102, 9, 1),
+                             scale * rot * ColumnVector3(102, 9, 1) + trans));
 
-    data.push_back(pair<ColumnVector3, ColumnVector3>(
-        ColumnVector3(-102, 9, 1),
-        scale * rot * ColumnVector3(-102, 9, 100) + trans));
-    data.push_back(pair<ColumnVector3, ColumnVector3>(
-        ColumnVector3(-12, 90, 1),
-        scale * rot * ColumnVector3(-1, 90, 0) + trans));
-    data.push_back(pair<ColumnVector3, ColumnVector3>(
-        ColumnVector3(-9, 9, 1),
-        scale * rot * ColumnVector3(1, 9, 100) + trans));
+    data.push_back(
+        make_pair(ColumnVector3(-102, 9, 1),
+                  scale * rot * ColumnVector3(-102, 9, 100) + trans));
+    data.push_back(make_pair(ColumnVector3(-12, 90, 1),
+                             scale * rot * ColumnVector3(-1, 90, 0) + trans));
+    data.push_back(make_pair(ColumnVector3(-9, 9, 1),
+                             scale * rot * ColumnVector3(1, 9, 100) + trans));
 
     SfM sfm;
     for (int i = 0; i < 10; ++i) {

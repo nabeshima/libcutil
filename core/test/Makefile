@@ -13,6 +13,7 @@ PTHREAD_LDFLAGS=-pthread
 endif
 
 TARGETS=\
+	realtime_test \
 	period_test \
 	proc_test \
 	thread_test \
@@ -22,7 +23,7 @@ TARGETS=\
 all: $(TARGETS)
 
 $(TARGETS): $(TARGETS:%=%.cpp)
-	$(CXX) $@.cpp -c -I.. $(CFLAGS_TEST)
+	$(CXX) $@.cpp -c -I.. $(CFLAGS_TEST) #-DCUTIL_RT_ENABLED #-DCUTIL_TIMERFD_ENABLED
 	$(CXX) $@.o -o $@ $(LDFLAGS_TEST) $(PTHREAD_LDFLAGS)
 
 test: all

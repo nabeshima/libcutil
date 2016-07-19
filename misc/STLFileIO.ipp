@@ -5,8 +5,8 @@
  * http://opensource.org/licenses/mit-license.php
  */
 
-#include <inttypes.h>
 #include <cstring>
+#include <inttypes.h>
 
 #include <fstream>
 

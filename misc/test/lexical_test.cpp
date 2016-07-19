@@ -22,5 +22,18 @@ int main() {
 
   cout << i * i << endl;
 
+  bool fail;
+  i = lexical_cast<int>("str", &fail);
+
+  cout << "fail:" << fail << ", " << i * i << endl;
+
+  i = lexical_cast<int>('1', &fail);
+  cout << "fail:" << fail << ", " << i * i << endl;
+
+  // char k = lexical_cast<char>(142, &fail);
+  string k = lexical_cast<string>(142, &fail);
+
+  // char* u = lexical_cast<char*>(142, &fail);
+
   return 0;
 }

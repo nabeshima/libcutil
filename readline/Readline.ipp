@@ -9,8 +9,8 @@ extern "C" {
 #include <unistd.h>
 }
 
-#include <iostream>
 #include <algorithm>
+#include <iostream>
 
 #include "Cursor.h"
 

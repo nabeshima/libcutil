@@ -103,14 +103,12 @@ inline HashMap::const_iterator& HashMap::const_iterator::operator++() {
 }
 
 inline const std::pair<const std::string, std::string>&
-    HashMap::const_iterator::
-    operator*() const {
+    HashMap::const_iterator::operator*() const {
   return *mapIt;
 }
 
 inline const std::pair<const std::string, std::string>*
-    HashMap::const_iterator::
-    operator->() const {
+    HashMap::const_iterator::operator->() const {
   return &(*mapIt);
 }
 
@@ -140,7 +138,7 @@ inline bool HashMap::const_iterator::operator!=(
 //----------------------------
 
 inline HashMap::HashMap()
-    : bucket(new std::map<const std::string, std::string>[BUCKET_SIZE]) {}
+    : bucket(new std::map<const std::string, std::string>[ BUCKET_SIZE ]) {}
 
 inline HashMap::~HashMap() { delete[] bucket; }
 

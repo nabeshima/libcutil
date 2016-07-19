@@ -17,7 +17,8 @@ TARGETS=\
 	udp_test \
 	tcp_test \
 	ping_test \
-	sntp_test
+	sntp_test \
+	local_test
 
 
 all: $(TARGETS)

@@ -8,10 +8,18 @@
 #ifndef _CUTIL_LEXICAL_CAST_H_
 #define _CUTIL_LEXICAL_CAST_H_
 
+#include <cstddef>
+
+#include "./type_traits.h"
+
 namespace cutil {
 
 template <typename AFTER, typename BEFORE>
-AFTER lexical_cast(const BEFORE &val);
+AFTER lexical_cast(
+    const BEFORE &val, bool *is_fail = NULL,
+    typename enable_if<
+        ((is_numeric<BEFORE>::value && is_string<AFTER>::value) ||
+         (is_literal<BEFORE>::value && is_numeric<AFTER>::value))>::type * = 0);
 }
 
 #include "lexical_cast.ipp"

@@ -22,8 +22,7 @@ template <int M, int N>
 const double UKF<M, N>::lambda = ::sqrt(M + kappa);
 
 template <int M, int N>
-UKF<M, N>::UKF(const CColumnVector<M> &x0, const CMatrix<M, M> &P0)
-    : mx(x0) {
+UKF<M, N>::UKF(const CColumnVector<M> &x0, const CMatrix<M, M> &P0) : mx(x0) {
   CHOLm<M> cholm(P0);
   mL = cholm.L();
   mD = cholm.D();

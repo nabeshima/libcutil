@@ -392,6 +392,31 @@ inline bool Socket::bind(uint16_t port, int backlog) {
   return true;
 }
 
+inline bool Socket::bind(const Address &local_socket_path, int backlog) {
+  if (!isOpen() || isBound() || getFamily() != Local ||
+      local_socket_path.getFamily() != Local) {
+    return false;
+  }
+
+  // local socket path reusing
+  unlink(local_socket_path.toString().c_str());
+
+  sockaddr_un loc = local_socket_path.asLocal();
+  socklen_t len = sizeof(sockaddr_un);
+
+  if (::bind(sock, (sockaddr *)&loc, len) == -1) {
+    close();
+    return false;
+  }
+
+  local_addr = local_socket_path;
+
+  if (getType() == TCP && ::listen(sock, backlog) == -1) {
+    return false;
+  }
+  return true;
+}
+
 inline bool Socket::isBound() const { return (local_addr != Address()); }
 
 inline uint16_t Socket::boundPort() const { return local_addr.getPort(); }

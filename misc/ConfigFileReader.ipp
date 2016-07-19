@@ -171,9 +171,9 @@ inline void ConfigFileReader::open(const std::string& filename) {
   ++(*this);
 }
 
-inline const std::string& ConfigFileReader::getSection() const  {
+inline const std::string& ConfigFileReader::getSection() const {
   return section;
 }
 
-inline bool ConfigFileReader::isEmpty() const  { return eof_flag; }
+inline bool ConfigFileReader::isEmpty() const { return eof_flag; }
 }

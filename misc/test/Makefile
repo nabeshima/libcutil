@@ -19,7 +19,9 @@ TARGETS=\
 	cipher_test \
 	intx_test \
 	hash_test \
-	octree_test
+	octree_test \
+	options_test \
+	sharedptr_test
 
 all: $(TARGETS)
 
@@ -35,6 +37,7 @@ test: all
 		echo "##"; \
 		./$$i;\
 	done
+	./options_test --debug=true --port=1214444111111111 --help --log=fffggg112,222
 
 clean distclean:
 	rm -rf *~ .#* $(TARGETS) $(TARGETS:%=%.o)

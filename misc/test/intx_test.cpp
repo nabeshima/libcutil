@@ -6,8 +6,8 @@
  */
 
 #include <climits>
-#include <iostream>
 #include <intX_t.h>
+#include <iostream>
 
 #ifndef LLONG_MAX
 #define LLONG_MAX 9223372036854775807LL

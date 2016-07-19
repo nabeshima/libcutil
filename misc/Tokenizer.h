@@ -8,8 +8,8 @@
 #ifndef _CUTIL_TOKENIZER_H_
 #define _CUTIL_TOKENIZER_H_
 
-#include <vector>
 #include <string>
+#include <vector>
 
 namespace cutil {
 
@@ -19,13 +19,16 @@ class Tokenizer : std::iterator<std::forward_iterator_tag, std::string> {
   std::string delim;
   std::string orig;
   std::string token;
+  bool keep_delim;
+  char escape;
 
   bool operator==(const Tokenizer& opp) const;
   bool operator!=(const Tokenizer& opp) const;
 
  public:
   Tokenizer();
-  explicit Tokenizer(const std::string& orig, const std::string& delim = " ,");
+  explicit Tokenizer(const std::string& orig, const std::string& delim,
+                     bool keep_delim = false, char escape = 0);
 
   Tokenizer(const Tokenizer& opp);
   Tokenizer& operator=(const Tokenizer& opp);
@@ -36,7 +39,8 @@ class Tokenizer : std::iterator<std::forward_iterator_tag, std::string> {
   std::string* operator->();
 
   // set string to tokenize
-  void set(const std::string& orig, const std::string& delim = " ,");
+  void set(const std::string& orig, const std::string& delim = " ,",
+           bool keep_delim = false, char escape = 0);
 
   // reset to tokenize string from head
   void clear();

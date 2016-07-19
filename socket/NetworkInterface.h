@@ -10,11 +10,7 @@
 
 namespace cutil {
 
-class NetworkInterface {
-  
-
-};
-
+class NetworkInterface {};
 }
 
 #endif

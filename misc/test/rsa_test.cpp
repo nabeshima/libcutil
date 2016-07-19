@@ -5,8 +5,8 @@
  * http://opensource.org/licenses/mit-license.php
  */
 
-#include <iostream>
 #include <iomanip>
+#include <iostream>
 
 using namespace std;
 

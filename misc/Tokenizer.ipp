@@ -7,36 +7,66 @@
 
 namespace cutil {
 
-inline Tokenizer::Tokenizer() : seek(0) {}
+inline Tokenizer::Tokenizer() : seek(0), keep_delim(false), escape(0) {}
 
-inline Tokenizer::Tokenizer(const std::string& orig, const std::string& delim) {
-  set(orig, delim);
+inline Tokenizer::Tokenizer(const std::string& orig, const std::string& delim,
+                            bool keep_delim, char escape) {
+  set(orig, delim, keep_delim, escape);
 }
 
 inline Tokenizer::Tokenizer(const Tokenizer& opp)
-    : seek(opp.seek), delim(opp.delim), orig(opp.orig), token(opp.token) {}
+    : seek(opp.seek),
+      delim(opp.delim),
+      orig(opp.orig),
+      token(opp.token),
+      keep_delim(opp.keep_delim),
+      escape(opp.escape) {}
 
 inline Tokenizer& Tokenizer::operator=(const Tokenizer& opp) {
   this->seek = opp.seek;
   this->delim = opp.delim;
   this->orig = opp.orig;
   this->token = opp.token;
+  this->keep_delim = opp.keep_delim;
+  this->escape = opp.escape;
   return *this;
 }
 
 inline Tokenizer& Tokenizer::operator++() {
-  if (!isEmpty()) {
-    seek = orig.find_first_not_of(delim, seek);
+  if (isEmpty()) {
+    return *this;
+  }
 
-    if (seek != std::string::npos) {
-      std::size_t ep = orig.find_first_of(delim, seek);
-      token = orig.substr(seek, ep - seek);
-      seek = ep;
+  if (!keep_delim) {  // skip first delimiter
+    seek = orig.find_first_not_of(delim, seek);
+  }
+
+  if (seek == std::string::npos) {
+    token = "";
+    return *this;
+  }
+
+  std::size_t ep = seek;
+
+  while (true) {
+    ep = orig.find_first_of(delim, ep);
+    if (ep == std::string::npos) {  // end if delimiter is not found.
+      break;
+    } else if (ep == seek) {  // delimiter is found at the first character
+      ++ep;
+      break;
+    } else if (escape != 0 &&
+               orig.at(ep - 1) ==
+                   escape) {  // delimiter is found just after escape character
+      ++ep;
+      continue;
     } else {
-      token = "";
+      break;
     }
   }
 
+  token = orig.substr(seek, ep - seek);
+  seek = ep;
   return *this;
 }
 
@@ -44,11 +74,14 @@ inline std::string& Tokenizer::operator*() { return token; }
 
 inline std::string* Tokenizer::operator->() { return &token; }
 
-inline void Tokenizer::set(const std::string& orig, const std::string& delim) {
+inline void Tokenizer::set(const std::string& orig, const std::string& delim,
+                           bool keep_delim, char escape) {
   this->seek = 0;
   this->delim = delim;
   this->orig = orig;
   this->token = "";
+  this->keep_delim = keep_delim;
+  this->escape = escape;
   ++(*this);
 }
 

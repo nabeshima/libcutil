@@ -6,6 +6,7 @@
  */
 
 extern "C" {
+
 extern int dpotrf_(char *uplo, int *n, double *a, int *lda, int *info);
 
 extern int spotrf_(char *uplo, int *n, float *a, int *lda, int *info);

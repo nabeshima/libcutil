@@ -5,14 +5,22 @@
  * http://opensource.org/licenses/mit-license.php
  */
 
+#include <cstring>
+
 extern "C" {
+#include <errno.h>
+#include <fcntl.h>
+#include <signal.h>
 #include <stdint.h>
 #include <sys/time.h>
-#include <fcntl.h>
-#include <errno.h>
+#include <unistd.h>
 
 #ifdef CUTIL_TIMERFD_ENABLED
 #include <sys/timerfd.h>
+#endif
+
+#ifdef CUTIL_RT_ENABLED
+#include <sys/mman.h>
 #endif
 }
 
@@ -132,10 +140,27 @@ inline bool Thread::start(Holder<Functor> holder) {
   return true;
 }
 
-inline Thread::Thread(pthread_t tid)
-    : tid(tid), priority(0), startFlag(false) {}
+inline Thread::Thread(pthread_t tid) : tid(tid), priority(0), startFlag(false) {
+#ifdef CUTIL_TIMERFD_ENABLED
+  timer_fd = 0;
+#endif
 
-inline Thread::Thread() : tid(0), priority(0), startFlag(false) {}
+#ifdef CUTIL_RT_ENABLED
+  prev_ts.tv_sec = 0;
+  prev_ts.tv_nsec = 0;
+#endif
+}
+
+inline Thread::Thread() : tid(0), priority(0), startFlag(false) {
+#ifdef CUTIL_TIMERFD_ENABLED
+  timer_fd = 0;
+#endif
+
+#ifdef CUTIL_RT_ENABLED
+  prev_ts.tv_sec = 0;
+  prev_ts.tv_nsec = 0;
+#endif
+}
 
 inline Thread::~Thread() {
   if (isRunning()) {
@@ -143,11 +168,10 @@ inline Thread::~Thread() {
   }
 
   join();
-}
 
-inline std::map<pthread_t, int> &Thread::timerfdMap() {
-  static std::map<pthread_t, int> timerfdmap;
-  return timerfdmap;
+#ifdef CUTIL_TIMERFD_ENABLED
+  exitPeriodic();
+#endif
 }
 
 inline bool Thread::start() {
@@ -253,28 +277,23 @@ inline Thread Thread::self() { return Thread(::pthread_self()); }
 
 #ifdef CUTIL_TIMERFD_ENABLED
 
-inline bool Thread::enterPeriodic(int64_t period_usec) {
-  std::map<pthread_t, int>::iterator it = timerfdMap().find(::pthread_self());
-
-  if (it != timerfdMap().end()) {
+inline bool Thread::enterPeriodic() {
+  if (timer_fd != 0) {
     return false;
   }
 
-  int timer_fd = ::timerfd_create(CLOCK_REALTIME, 0);
+  timer_fd = ::timerfd_create(CLOCK_REALTIME, 0);
 
   if (timer_fd == -1) {
+    timer_fd = 0;
     return false;
   }
 
-  timerfdMap().insert(std::pair<pthread_t, int>(::pthread_self(), timer_fd));
-
-  return setPeriod(period_usec);
+  return true;
 }
 
 inline bool Thread::setPeriod(int64_t period_usec) {
-  std::map<pthread_t, int>::iterator it = timerfdMap().find(::pthread_self());
-
-  if (it == timerfdMap().end()) {
+  if (timer_fd == 0) {
     return false;
   }
 
@@ -285,7 +304,7 @@ inline bool Thread::setPeriod(int64_t period_usec) {
   itval.it_interval.tv_nsec = itval.it_value.tv_nsec =
       (period_usec - itval.it_interval.tv_sec * 1000000) * 1000;
 
-  if (::timerfd_settime(it->second, 0, &itval, NULL) == -1) {
+  if (::timerfd_settime(timer_fd, 0, &itval, NULL) == -1) {
     return false;
   }
 
@@ -293,41 +312,39 @@ inline bool Thread::setPeriod(int64_t period_usec) {
 }
 
 inline int Thread::waitPeriod() {
-  std::map<pthread_t, int>::iterator it = timerfdMap().find(::pthread_self());
-
-  if (it == timerfdMap().end()) {
-    return -1;
+  if (timer_fd == 0) {
+    return false;
   }
 
   uint64_t missed = 0, tmp = 0;
 
   //! save flag
-  int flag = ::fcntl(it->second, F_GETFL, NULL);
+  int flag = ::fcntl(timer_fd, F_GETFL, NULL);
   if (flag < 0) {
     return -1;
   }
 
   //! make non-blocking
-  if (::fcntl(it->second, F_SETFL, flag | O_NONBLOCK) < 0) {
-    return -1
+  if (::fcntl(timer_fd, F_SETFL, flag | O_NONBLOCK) < 0) {
+    return -1;
   }
 
   //! non-blocking read and accumulate overrun
-  int ret = ::read(it->second, &tmp, sizeof(tmp));
+  int ret = ::read(timer_fd, &tmp, sizeof(tmp));
 
   if (ret == -1 && errno != EAGAIN) {
-    return -1
+    return -1;
   } else if (ret > 0) {
     missed += tmp;
   }
 
   //! make blocking
-  if (::fcntl(it->second, F_SETFL, flag) < 0) {
+  if (::fcntl(timer_fd, F_SETFL, flag) < 0) {
     return -1;
   }
 
   //! blocking read and wait next period
-  ret = ::read(it->second, &tmp, sizeof(tmp));
+  ret = ::read(timer_fd, &tmp, sizeof(tmp));
 
   if (ret == -1) {
     return -1;
@@ -337,18 +354,73 @@ inline int Thread::waitPeriod() {
 }
 
 inline bool Thread::exitPeriodic() {
-  std::map<pthread_t, int>::iterator it = timerfdMap().find(::pthread_self());
-
-  if (it == timerfdMap().end()) {
+  if (timer_fd == 0) {
     return false;
   }
 
-  ::close(it->second);
-
-  timerfdMap().erase(it);
+  ::close(timer_fd);
   return true;
 }
 
+#endif
+
+#ifdef CUTIL_RT_ENABLED
+inline bool Thread::enterRealtime() {
+  if (isRunning()) {
+    sched_param param;
+    param.sched_priority = priority;
+
+    if (::pthread_setschedparam(tid, SCHED_FIFO, &param) != 0) {
+      return false;
+    }
+
+    if (::mlockall(MCL_CURRENT | MCL_FUTURE) != 0) {
+      return false;
+    }
+
+    // stack prefault
+    {
+      const int MAX_SAFE_STACK = 8 * 1024;
+      unsigned char dummy[MAX_SAFE_STACK];
+      ::memset(dummy, 0, MAX_SAFE_STACK);
+    }
+  }
+
+  return true;
+}
+
+inline int64_t Thread::waitNext(int64_t period_usec) {
+  if (prev_ts.tv_sec == 0 && prev_ts.tv_nsec == 0) {
+    clock_gettime(CLOCK_MONOTONIC, &prev_ts);
+  }
+
+  // overrun detection
+  timespec current_ts;
+  clock_gettime(CLOCK_MONOTONIC, &current_ts);
+  int64_t diff_usec = (current_ts.tv_sec - prev_ts.tv_sec) * 1000000L +
+                      (current_ts.tv_nsec - prev_ts.tv_nsec) / 1000;
+
+  // overrun
+  if (diff_usec > period_usec) {
+    // reset
+    prev_ts.tv_sec = 0;
+    prev_ts.tv_nsec = 0;
+    return diff_usec;
+  }
+
+  // calculate next shot
+  int64_t sec = period_usec / 1000000L;
+  int64_t nsec = (period_usec - sec * 1000000L) * 1000 + prev_ts.tv_nsec;
+  while (nsec > 1000000000L) {
+    ++sec;
+    nsec -= 1000000000L;
+  }
+  timespec target_ts;
+  target_ts.tv_sec = prev_ts.tv_sec + sec;
+  target_ts.tv_nsec = nsec;
+  prev_ts = target_ts;
+  return clock_nanosleep(CLOCK_MONOTONIC, TIMER_ABSTIME, &target_ts, NULL);
+}
 #endif
 
 inline LoopThreadBase::LoopThreadBase() : stopFlag(false), suspendFlag(false) {}
@@ -432,14 +504,33 @@ inline PeriodicThread::PeriodicThread(int64_t period_usec)
 inline PeriodicThread::~PeriodicThread() {}
 
 inline void PeriodicThread::operator()() {
-  Thread::enterPeriodic(period_usec);
+  enterPeriodic();
+  setPeriod(period_usec);
   LoopThreadBase::operator()();
-  Thread::exitPeriodic();
+  exitPeriodic();
 }
 
-inline void PeriodicThread::sleepFunc() { overrun = Thread::waitPeriod(); }
+inline void PeriodicThread::sleepFunc() { overrun = waitPeriod(); }
 
 inline int PeriodicThread::getOverrun() const { return overrun; }
+
+#endif
+
+#ifdef CUTIL_RT_ENABLED
+
+inline RealtimeThread::RealtimeThread(int64_t period_usec)
+    : period_usec(period_usec), overrun(0) {}
+
+inline RealtimeThread::~RealtimeThread() {}
+
+inline void RealtimeThread::operator()() {
+  enterRealtime();
+  LoopThreadBase::operator()();
+}
+
+inline void RealtimeThread::sleepFunc() { overrun = waitNext(period_usec); }
+
+inline int RealtimeThread::getOverrun() const { return overrun; }
 
 #endif
 }

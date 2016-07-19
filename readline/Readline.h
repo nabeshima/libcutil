@@ -13,8 +13,8 @@ extern "C" {
 }
 
 #include <fstream>
-#include <vector>
 #include <string>
+#include <vector>
 
 namespace cutil {
 

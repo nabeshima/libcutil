@@ -5,8 +5,8 @@
  * http://opensource.org/licenses/mit-license.php
  */
 
-#include "Readline.h"
 #include "Cursor.h"
+#include "Readline.h"
 #include <string>
 
 using namespace std;

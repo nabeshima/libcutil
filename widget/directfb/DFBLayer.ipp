@@ -9,56 +9,43 @@
 
 namespace cutil {
 
-
-inline
-DFBLayer::DFBLayer() {
+inline DFBLayer::DFBLayer() {
   //! get device information
   IDirectFB *dfb = DFBEventThread::getDFB();
 
   DFBGraphicsDeviceDescription gdesc;
-  dfb->GetDeviceDescription( dfb, &gdesc );
-  
+  dfb->GetDeviceDescription(dfb, &gdesc);
+
   //! get layer
-  dfb->GetDisplayLayer( dfb, DLID_PRIMARY, &layer );
-  
-  layer->SetCooperativeLevel( layer, DLSCL_ADMINISTRATIVE );
-  
-  if ( !( ( gdesc.blitting_flags & DSBLIT_BLEND_ALPHACHANNEL ) &&
-	  ( gdesc.blitting_flags & DSBLIT_BLEND_COLORALPHA ) ) ) {
+  dfb->GetDisplayLayer(dfb, DLID_PRIMARY, &layer);
+
+  layer->SetCooperativeLevel(layer, DLSCL_ADMINISTRATIVE);
+
+  if (!((gdesc.blitting_flags & DSBLIT_BLEND_ALPHACHANNEL) &&
+        (gdesc.blitting_flags & DSBLIT_BLEND_COLORALPHA))) {
     layer_config.flags = DLCONF_BUFFERMODE;
     layer_config.buffermode = DLBM_BACKSYSTEM;
-    
-    layer->SetConfiguration( layer, &layer_config );
+
+    layer->SetConfiguration(layer, &layer_config);
   }
-  
-  layer->GetConfiguration( layer, &layer_config );
-  
+
+  layer->GetConfiguration(layer, &layer_config);
+
   //! to get cursor motion.
-  layer->EnableCursor( layer, 1 );
+  layer->EnableCursor(layer, 1);
 
   //! to hide cursor
-  layer->SetCursorOpacity( layer, 50 );
+  layer->SetCursorOpacity(layer, 50);
 }
 
-inline
-DFBLayer::~DFBLayer() {
-  layer->Release( layer );
-}
+inline DFBLayer::~DFBLayer() { layer->Release(layer); }
 
-inline
-int DFBLayer::getWidth() {
-  return layer_config.width;
-}
+inline int DFBLayer::getWidth() { return layer_config.width; }
 
-inline
-int DFBLayer::getHeight() {
-  return layer_config.height;
-}
+inline int DFBLayer::getHeight() { return layer_config.height; }
 
-inline
-void DFBLayer::setBackground( const DFBSurface &surface ) {
-  layer->SetBackgroundImage( layer, surface.surface );
-  layer->SetBackgroundMode( layer, DLBM_IMAGE );
+inline void DFBLayer::setBackground(const DFBSurface &surface) {
+  layer->SetBackgroundImage(layer, surface.surface);
+  layer->SetBackgroundMode(layer, DLBM_IMAGE);
 }
-
 }

@@ -8,8 +8,8 @@
 #include <tr1/functional>
 
 #include <iostream>
-#include <string>
 #include <sstream>
+#include <string>
 
 using namespace std::tr1;                // function, bind
 using namespace std::tr1::placeholders;  // _1, _2

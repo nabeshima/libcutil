@@ -7,10 +7,11 @@
 
 extern "C" {
 #include <sys/wait.h>
+#include <unistd.h>
 }
-#include <cstdlib>
 #include <cerrno>
 #include <csignal>
+#include <cstdlib>
 
 namespace cutil {
 
@@ -26,8 +27,7 @@ inline void closePipe(int *pp) {
 }
 
 template <Process::IOHolderType type>
-inline Process::IOHolder<type>::IOHolder(Process *proc)
-    : proc(proc) {}
+inline Process::IOHolder<type>::IOHolder(Process *proc) : proc(proc) {}
 
 template <Process::IOHolderType type>
 inline int Process::IOHolder<type>::write(const void *data, int size) {

@@ -10,8 +10,8 @@
 
 #include <cstddef>
 #include <iterator>
-#include <string>
 #include <map>
+#include <string>
 #include <utility>
 
 namespace cutil {

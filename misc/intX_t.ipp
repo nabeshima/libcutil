@@ -5,8 +5,8 @@
  * http://opensource.org/licenses/mit-license.php
  */
 
-#include <sstream>
 #include <iomanip>
+#include <sstream>
 
 namespace cutil {
 
@@ -384,8 +384,7 @@ void intX_t::bitOperation(intX_t *result, const intX_t &a, Functor func) {
 inline intX_t::intX_t() : sign(POSITIVE) {}
 
 template <typename INTEGER>
-inline intX_t::intX_t(const INTEGER &x)
-    : sign(POSITIVE) {
+inline intX_t::intX_t(const INTEGER &x) : sign(POSITIVE) {
   if (x == 0) {
     return;
   }
