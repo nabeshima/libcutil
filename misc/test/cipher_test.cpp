@@ -5,14 +5,17 @@
  * http://opensource.org/licenses/mit-license.php
  */
 
+extern "C" {
+#include <stdint.h>
+}
+
 #include <climits>
 #include <iomanip>
 #include <iostream>
 
-using namespace std;
-
 #include <CamelliaCipher.h>
 
+using namespace std;
 using namespace cutil;
 
 int main() {

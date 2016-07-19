@@ -10,6 +10,7 @@
 extern "C" {
 #include <sys/ioctl.h>
 #include <termios.h>
+#include <unistd.h>
 }
 
 namespace cutil {

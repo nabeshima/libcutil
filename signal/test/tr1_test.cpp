@@ -5,6 +5,10 @@
  * http://opensource.org/licenses/mit-license.php
  */
 
+extern "C" {
+#include <stdint.h>
+}
+
 #include <tr1/functional>
 
 #include <iostream>

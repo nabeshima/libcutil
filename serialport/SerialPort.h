@@ -8,6 +8,10 @@
 #ifndef _CUTIL_SERIALPORT_H_
 #define _CUTIL_SERIALPORT_H_
 
+extern "C" {
+#include <stdint.h>
+}
+
 #include <string>
 
 #include "./_serialport_config.h"

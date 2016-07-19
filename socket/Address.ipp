@@ -74,7 +74,9 @@ inline void Address::setAddress(const std::string &socket_file_local_path) {
   }
   ::strncpy(saddr.sun_path, socket_file_local_path.c_str(), len);
   saddr.sun_path[len] = '\0';
+#if defined(__APPLE__) && !defined(__FreeBSD__)
   saddr.sun_len = len + 1;
+#endif
 }
 
 inline INFamily Address::getFamily() const {

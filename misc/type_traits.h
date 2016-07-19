@@ -8,6 +8,9 @@
 #ifndef CUTIL_TYPE_TRAITS_H_
 #define CUTIL_TYPE_TRAITS_H_
 
+extern "C" {
+#include <stdint.h>
+}
 #include <string>
 
 namespace cutil {
