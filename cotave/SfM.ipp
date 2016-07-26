@@ -7,9 +7,9 @@
 
 namespace cotave {
 
-SfM::SfM() { reset(); }
+inline SfM::SfM() { reset(); }
 
-void SfM::reset() {
+inline void SfM::reset() {
   N.fill(0.0);
   sumL.fill(0.0);
   sumR.fill(0.0);
@@ -24,7 +24,7 @@ void SfM::reset() {
   err = 0.0;
 }
 
-void SfM::accumulate(const ColumnVector3 &pL, const ColumnVector3 &pR) {
+inline void SfM::accumulate(const ColumnVector3 &pL, const ColumnVector3 &pR) {
   sumL += pL;
   sumR += pR;
   absSumL += pL.absolute2();
@@ -34,11 +34,11 @@ void SfM::accumulate(const ColumnVector3 &pL, const ColumnVector3 &pR) {
   ++num;
 }
 
-void SfM::accumulate(const std::pair<ColumnVector3, ColumnVector3> &p) {
+inline void SfM::accumulate(const std::pair<ColumnVector3, ColumnVector3> &p) {
   accumulate(p.first, p.second);
 }
 
-void SfM::calculate() {
+inline void SfM::calculate() {
   double varL = absSumL - sumL.absolute2() / (double)num,
          varR = absSumR - sumR.absolute2() / (double)num;
 
@@ -56,13 +56,13 @@ void SfM::calculate() {
   err = ::fabs(scl * 2.0 * (::sqrt(varL * varR) - D));
 }
 
-double SfM::scale() const { return scl; }
+inline double SfM::scale() const { return scl; }
 
-RotationMatrix SfM::rotation() const { return rot.rotationMatrix(); }
+inline RotationMatrix SfM::rotation() const { return rot.rotationMatrix(); }
 
-const Quaternion &SfM::quaternion() const { return rot; }
+inline const Quaternion &SfM::quaternion() const { return rot; }
 
-const ColumnVector3 &SfM::translation() const { return trans; }
+inline const ColumnVector3 &SfM::translation() const { return trans; }
 
-double SfM::error() const { return err; }
+inline double SfM::error() const { return err; }
 }

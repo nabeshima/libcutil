@@ -1,8 +1,5 @@
 /**
- * $Id$
- * Copyright (c) 2016 Cota Nabeshima <cota@upard.org>
- * This file is subject to the MIT license available at,
- * http://opensource.org/licenses/mit-license.php
+ * Copyright (c) 2016 CYBERDYNE Inc.
  */
 
 #include <iostream>
@@ -22,11 +19,7 @@ class MyRealtimeThread : public RealtimeThread {
   timeval tv, tv_p;
 
  protected:
-  virtual void headFunc() {
-    cout << "enterRealtime() in headFunc()" << endl;
-    enterRealtime();
-    gettimeofday(&tv_p, NULL);
-  }
+  virtual void headFunc() { gettimeofday(&tv_p, NULL); }
 
   virtual void eachLoop() {
     if (count >= 1000L) {
