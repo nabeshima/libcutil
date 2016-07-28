@@ -7,7 +7,11 @@
 
 INSTALLPATH=/usr/local
 
+# switch by OS
+ifeq (${shell uname},Darwin)
+CXX=clang++
+else
 CXX=g++
-
-CFLAGS_TEST=-Wall -g -I../../ -I/usr/include/c++/4.2.1 -stdlib=libstdc++ # -D_SIGEXCEPTION_ Exception.cpp 
-LDFLAGS_TEST=-stdlib=libstdc++
+CFLAGS_TEST=-Wall -g # -D_SIGEXCEPTION_ Exception.cpp 
+LDFLAGS_TEST=
+endif

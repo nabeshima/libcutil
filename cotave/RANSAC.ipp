@@ -5,7 +5,13 @@
  * http://opensource.org/licenses/mit-license.php
  */
 
+#ifdef __clang__
+#include <random>
+namespace tr1 = std;
+#else
 #include <tr1/random>
+namespace tr1 = std::tr1;
+#endif
 
 namespace cotave {
 
@@ -24,7 +30,7 @@ bool RANSAC::run(ESTIMATOR *result, std::vector<DATA_TYPE> *data,
   bool auto_threshold = (error_threshold <= 0.0);
 
   // 乱数生成器
-  std::tr1::mt19937 rand(static_cast<unsigned long>(::time(0)));
+  tr1::mt19937 rand(static_cast<unsigned long>(::time(0)));
 
   // パラメータ推定器
   ESTIMATOR *estimator = new ESTIMATOR[estimation_times];

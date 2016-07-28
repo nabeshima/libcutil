@@ -8,8 +8,11 @@
 include ../../Makefile.usrdef
 
 TARGETS=\
-	tr1_test \
 	signal_test \
+
+ifeq (${shell uname},Linux)
+TARGETS=$(TARGETS) tr1_test
+endif
 
 
 all: $(TARGETS)

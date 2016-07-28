@@ -12,7 +12,7 @@
 #include "Signal.h"
 
 using namespace std;
-using namespace std::tr1;
+using namespace cutil::tr1;
 using namespace cutil;
 
 int func1(int i) { return i * 2; }

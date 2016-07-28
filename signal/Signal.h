@@ -8,20 +8,31 @@
 #ifndef __CUTIL_SIGNAL_H__
 #define __CUTIL_SIGNAL_H__
 
+#ifdef __clang__
+#include <functional>
+#include <type_traits>
+#else
 #include <tr1/functional>
 #include <tr1/type_traits>
+#endif
 
 #include <list>
 
 namespace cutil {
 
+#ifdef __clang__
+namespace tr1 = std;
+#else
+namespace tr1 = std::tr1;
+#endif
+
 template <typename R, typename Signature>
 class SignalBase {
  protected:
-  typedef std::tr1::function<Signature> function_type;
-  typedef std::list<std::tr1::function<Signature> > slot_type;
+  typedef tr1::function<Signature> function_type;
+  typedef std::list<tr1::function<Signature> > slot_type;
 
-  std::list<std::tr1::function<Signature> > slots;
+  std::list<tr1::function<Signature> > slots;
 
  public:
   std::list<R> results;
@@ -30,10 +41,10 @@ class SignalBase {
 template <typename Signature>
 class SignalBase<void, Signature> {
  protected:
-  typedef std::tr1::function<Signature> function_type;
-  typedef std::list<std::tr1::function<Signature> > slot_type;
+  typedef tr1::function<Signature> function_type;
+  typedef std::list<tr1::function<Signature> > slot_type;
 
-  std::list<std::tr1::function<Signature> > slots;
+  std::list<tr1::function<Signature> > slots;
 };
 
 template <class T>
