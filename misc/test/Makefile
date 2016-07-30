@@ -21,7 +21,8 @@ TARGETS=\
 	hash_test \
 	octree_test \
 	options_test \
-	sharedptr_test
+	sharedptr_test \
+	byte_test
 
 all: $(TARGETS)
 

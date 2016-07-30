@@ -75,15 +75,15 @@ enum INFamily { IPv4 = AF_INET, IPv6 = AF_INET6, Local = AF_LOCAL };
 enum SocketType { RAW = SOCK_RAW, UDP = SOCK_DGRAM, TCP = SOCK_STREAM };
 
 //! endian conversion.
-template <class VALUE>
+template <typename VALUE>
 inline VALUE reverse_endian(VALUE value) {
-  char volatile* first = reinterpret_cast<char volatile*>(&value);
-  char volatile* last = first + sizeof(VALUE);
+  uint8_t volatile *first = reinterpret_cast<uint8_t volatile *>(&value);
+  uint8_t volatile *last = first + sizeof(VALUE);
   std::reverse(first, last);
   return value;
 }
 
-template <class VALUE>
+template <typename VALUE>
 inline VALUE ntoh(VALUE value) {
 #ifdef __BIG_ENDIAN__
   return value;
@@ -92,7 +92,7 @@ inline VALUE ntoh(VALUE value) {
 #endif
 }
 
-template <class VALUE>
+template <typename VALUE>
 inline VALUE hton(VALUE value) {
 #ifdef __BIG_ENDIAN__
   return value;
@@ -100,6 +100,7 @@ inline VALUE hton(VALUE value) {
   return reverse_endian(value);
 #endif
 }
+
 }  // namespace cutil
 
 #endif
