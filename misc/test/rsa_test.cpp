@@ -17,14 +17,15 @@ using namespace cutil;
 int main() {
   intX_t n, e, d;
 
-  RSAKey::generate(&n, &e, &d, 256);
-  //  RSAKey::generate( n, e, d, 1024 );
+  //  RSAKey::generate(&n, &e, &d, 256);
+    RSAKey::generate( &n, &e, &d, 1024 );
 
   cout << "n : " << std::dec << n << endl;
   cout << "e : " << std::dec << e << endl;
   cout << "d : " << std::dec << d << endl;
 
-  intX_t M("0xfedcba98765432100123456789abcdef");
+  //  intX_t M("0xfedcba98765432100123456789abcdef");
+  intX_t M("0xfedcba98");
   cout << "M : " << std::hex << M << endl;
 
   intX_t C = RSACipher::encrypt(M, RSAKey(n, e));

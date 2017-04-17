@@ -12,7 +12,7 @@ namespace cutil {
 template <typename DOUBLE>
 inline void Polynomial<DOUBLE>::remove_zero() {
   while (coeff.size() > 0) {
-    if (coeff.back() == 0) {
+    if (coeff.back() == static_cast<DOUBLE>(0)) {
       coeff.pop_back();
     } else {
       break;
@@ -156,6 +156,30 @@ inline const DOUBLE &Polynomial<DOUBLE>::operator[](int i) const {
 template <typename DOUBLE>
 inline const DOUBLE &Polynomial<DOUBLE>::operator()(int i) const {
   return elem(i);
+}
+
+template <typename DOUBLE>
+inline DOUBLE Polynomial<DOUBLE>::substitute(DOUBLE x) const {
+  DOUBLE ret = static_cast<DOUBLE>(0);
+  DOUBLE xn = static_cast<DOUBLE>(1);
+  for (int i = 0; i < size(); ++i) {
+    ret += elem(i) * xn;
+    xn *= x;
+  }
+  return ret;
+}
+
+template <typename DOUBLE>
+inline Polynomial<DOUBLE> Polynomial<DOUBLE>::substitute(
+    const Polynomial<DOUBLE> &x) const {
+  Polynomial<DOUBLE> ret;
+  Polynomial<DOUBLE> xn;
+  xn.coeff.push_back(static_cast<DOUBLE>(1));
+  for (int i = 0; i < size(); ++i) {
+    ret += elem(i) * xn;
+    xn *= x;
+  }
+  return ret;
 }
 
 template <typename DOUBLE>

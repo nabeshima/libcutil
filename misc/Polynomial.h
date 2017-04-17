@@ -44,6 +44,9 @@ class Polynomial {
   const DOUBLE &operator[](int i) const;
   const DOUBLE &operator()(int i) const;
 
+  DOUBLE substitute(DOUBLE x) const;
+  Polynomial<DOUBLE> substitute(const Polynomial<DOUBLE> &x) const;
+
   std::string toString() const;
 };
 

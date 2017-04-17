@@ -22,7 +22,9 @@ TARGETS=\
 	octree_test \
 	options_test \
 	sharedptr_test \
-	byte_test
+	byte_test \
+	polynomial_test \
+	butterworth_test
 
 all: $(TARGETS)
 
