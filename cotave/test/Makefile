@@ -20,7 +20,8 @@ endif
 TARGETS=\
 	cotave_test \
 	polynomial_test \
-	butterworth_test
+	butterworth_test \
+	fft_test
 	
 
 all: $(TARGETS)

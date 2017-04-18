@@ -11,9 +11,9 @@
 
 namespace cotave {
 
-ButterworthFilter::ButterworthFilter(unsigned int order,
-                                     double sampling_frequency,
-                                     double cutoff_frequency)
+inline ButterworthFilter::ButterworthFilter(unsigned int order,
+                                            double sampling_frequency,
+                                            double cutoff_frequency)
     : order(order),
       x_coeff(new double[order + 1]),
       y_coeff(new double[order + 1]),
@@ -83,21 +83,21 @@ ButterworthFilter::ButterworthFilter(unsigned int order,
   }
 }
 
-ButterworthFilter::~ButterworthFilter() {
+inline ButterworthFilter::~ButterworthFilter() {
   delete[] x_coeff;
   delete[] y_coeff;
   delete[] x;
   delete[] y;
 }
 
-void ButterworthFilter::initialize(double input) {
+inline void ButterworthFilter::initialize(double input) {
   for (int i = 0; i < order + 1; ++i) {
     x[i] = input;
     y[i] = input;
   }
 }
 
-void ButterworthFilter::update(double input) {
+inline void ButterworthFilter::update(double input) {
   for (int i = order; i > 0; --i) {
     x[i] = x[i - 1];
     y[i] = y[i - 1];
@@ -115,11 +115,11 @@ void ButterworthFilter::update(double input) {
   y[0] = y0;
 }
 
-double ButterworthFilter::getOutput() const { return y[0]; }
+inline double ButterworthFilter::getOutput() const { return y[0]; }
 
-unsigned int ButterworthFilter::getOrder() const { return order; }
+inline unsigned int ButterworthFilter::getOrder() const { return order; }
 
-double ButterworthFilter::getXCoeff(unsigned int i) const {
+inline double ButterworthFilter::getXCoeff(unsigned int i) const {
   if (i <= order) {
     return x_coeff[i];
   } else {
@@ -127,7 +127,7 @@ double ButterworthFilter::getXCoeff(unsigned int i) const {
   }
 }
 
-double ButterworthFilter::getYCoeff(unsigned int i) const {
+inline double ButterworthFilter::getYCoeff(unsigned int i) const {
   if (i <= order) {
     return y_coeff[i];
   } else {
@@ -135,10 +135,9 @@ double ButterworthFilter::getYCoeff(unsigned int i) const {
   }
 }
 
-void ButterworthFilter::zeroPhaseFilter(double *outputs, const double *inputs,
-                                        unsigned int size, unsigned int order,
-                                        double sampling_frequency,
-                                        double cutoff_frequency) {
+inline void ButterworthFilter::zeroPhaseFilter(
+    double *outputs, const double *inputs, unsigned int size,
+    unsigned int order, double sampling_frequency, double cutoff_frequency) {
   ButterworthFilter bf(order, sampling_frequency, cutoff_frequency);
 
   // forward filtering
