@@ -10,7 +10,7 @@
 #include <ButterworthFilter.h>
 
 using namespace std;
-using namespace cutil;
+using namespace cotave;
 
 int main() {
   double freq = 0.0;

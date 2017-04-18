@@ -11,7 +11,7 @@
 #include <iostream>
 
 using namespace std;
-using namespace cutil;
+using namespace cotave;
 
 int main() {
   {
