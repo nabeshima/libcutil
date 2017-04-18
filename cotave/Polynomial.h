@@ -5,8 +5,8 @@
  * http://opensource.org/licenses/mit-license.php
  */
 
-#ifndef _CUTIL_POLYNOMIAL_H_
-#define _CUTIL_POLYNOMIAL_H_
+#ifndef _COTAVE_POLYNOMIAL_H_
+#define _COTAVE_POLYNOMIAL_H_
 
 #include <string>
 #include <vector>

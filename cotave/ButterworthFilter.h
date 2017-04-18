@@ -5,8 +5,8 @@
  * http://opensource.org/licenses/mit-license.php
  */
 
-#ifndef _CUTIL_BUTTERWORTHFILTER_H_
-#define _CUTIL_BUTTERWORTHFILTER_H_
+#ifndef _COTAVE_BUTTERWORTHFILTER_H_
+#define _COTAVE_BUTTERWORTHFILTER_H_
 
 namespace cotave {
 
@@ -44,4 +44,4 @@ class ButterworthFilter {
 
 #include "ButterworthFilter.ipp"
 
-#endif /* _CUTIL_BUTTERWORTHFILTER_H_ */
+#endif /* _COTAVE_BUTTERWORTHFILTER_H_ */
