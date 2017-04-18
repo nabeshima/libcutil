@@ -9,7 +9,7 @@
 
 #include <cmath>
 
-namespace cutil {
+namespace cotave {
 
 ButterworthFilter::ButterworthFilter(unsigned int order,
                                      double sampling_frequency,
@@ -156,4 +156,4 @@ void ButterworthFilter::zeroPhaseFilter(double *outputs, const double *inputs,
   }
 }
 
-}  // namespace cutil
+}  // namespace cotave

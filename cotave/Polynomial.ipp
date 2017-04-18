@@ -7,7 +7,7 @@
 
 #include <sstream>
 
-namespace cutil {
+namespace cotave {
 
 template <typename DOUBLE>
 inline void Polynomial<DOUBLE>::remove_zero() {

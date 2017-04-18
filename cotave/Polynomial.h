@@ -11,7 +11,7 @@
 #include <string>
 #include <vector>
 
-namespace cutil {
+namespace cotave {
 template <typename DOUBLE = double>
 class Polynomial {
  private:
@@ -74,7 +74,7 @@ Polynomial<DOUBLE> operator*(DOUBLE b, const Polynomial<DOUBLE> &a);
 template <typename DOUBLE>
 Polynomial<DOUBLE> operator/(const Polynomial<DOUBLE> &a, DOUBLE b);
 
-}  // namespace cutil
+}  // namespace cotave
 
 #include "Polynomial.ipp"
 

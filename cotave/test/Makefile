@@ -13,12 +13,15 @@ LAPACK_LDFLAGS=-llapack
 endif
 
 ifeq (${shell uname},Darwin)
-LAPACK_LDFLAGS=-L/opt/local/lib -llapack
+LAPACK_LDFLAGS=-llapack
 endif
 
 
 TARGETS=\
-	cotave_test
+	cotave_test \
+	polynomial_test \
+	butterworth_test
+	
 
 all: $(TARGETS)
 

@@ -8,7 +8,7 @@
 #ifndef _CUTIL_BUTTERWORTHFILTER_H_
 #define _CUTIL_BUTTERWORTHFILTER_H_
 
-namespace cutil {
+namespace cotave {
 
 class ButterworthFilter {
  private:
@@ -40,7 +40,7 @@ class ButterworthFilter {
                               double cutoff_frequency);
 };
 
-}  // namespace cutil
+}  // namespace cotave
 
 #include "ButterworthFilter.ipp"
 
