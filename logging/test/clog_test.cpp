@@ -16,6 +16,7 @@ using namespace cutil;
 int main() {
   CLog clog;
   clog.open("/tmp/log", 3000, true);
+  clog.setPriority(Thread::self().getPriority() - 1);
 
   for (int i = 0; i < 10; ++i) {
     clog.printf(CLog::INFO, "info %d", i);
