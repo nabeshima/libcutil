@@ -8,27 +8,12 @@
 include ../../Makefile.usrdef
 
 TARGETS=\
-	lexical_test \
-	stl_test \
-	ppm_test \
-	config_test \
-	token_test \
-	crc_test \
-	rsa_test \
-	sha_test \
-	cipher_test \
-	intx_test \
-	hash_test \
-	octree_test \
-	options_test \
-	sharedptr_test \
-	byte_test \
-	fwriteproxy_test
+	clog_test
 	
 all: $(TARGETS)
 
 $(TARGETS): $(TARGETS:%=%.cpp)
-	$(CXX) $@.cpp -c -I.. -I../../core $(CFLAGS_TEST)
+	$(CXX) $@.cpp -c -g -I.. -I../../core -I../../misc $(CFLAGS_TEST)
 	$(CXX) $@.o -o $@ $(LDFLAGS_TEST)
 
 test: all
@@ -39,7 +24,6 @@ test: all
 		echo "##"; \
 		./$$i;\
 	done
-	./options_test --debug=true --port=1214444111111111 --help --log=fffggg112,222
 
 clean distclean:
 	rm -rf *~ .#* $(TARGETS) $(TARGETS:%=%.o)

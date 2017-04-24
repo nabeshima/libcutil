@@ -16,7 +16,7 @@ misc/*
 cotave/*
         are a portable matrix class written in standard C++.
         It includes fixed size matrices and kinematic operation;
-        i.e. it is suitable for robotic probramming.
+        i.e. it is suitable for robots.
         Currently, its namespace is not cutil.
 
 socket/* 
