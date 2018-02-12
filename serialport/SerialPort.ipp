@@ -42,7 +42,13 @@ inline bool SerialPort::open(const std::string &portname, int baudrate,
   term_attr.c_cflag &= ~(CSIZE | PARENB | CSTOPB);  // clear
   term_attr.c_cflag |= databit | paritybit | stopbit | CREAD | CLOCAL;
 
-  term_attr.c_lflag &= ~(ICANON | ECHO | ECHOE | ISIG);  // non-canonical mode
+// non-canonical mode.
+#if defined(__APPLE__)
+  // IEXTEN should be off to ignore extended special characters for Mac OS X
+  term_attr.c_lflag &= ~(ICANON | ECHO | ECHOE | ISIG | IEXTEN);
+#else
+  term_attr.c_lflag &= ~(ICANON | ECHO | ECHOE | ISIG);
+#endif
 
   if (hardware_control) {
     term_attr.c_cflag |= CRTSCTS;
@@ -184,4 +190,4 @@ inline void SerialPort::flushWriteBuffer() {
     ::tcflush(fd, TCOFLUSH);
   }
 }
-}
+}  // namespace cutil
